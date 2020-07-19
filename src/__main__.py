@@ -1,20 +1,22 @@
 """rbldap entrypoint"""
 from argparse import ArgumentParser
+from asyncio import get_event_loop
 
-from .add import add_user_cli
-from .batch import (
-    alert_unpaid_users_cli,
-    delete_unpaid_users_cli,
-    disable_unpaid_users_cli,
-    new_year_cli,
+from .commands import (
+    add,
+    alert_unpaid,
+    delete_unpaid,
+    disable,
+    disable_unpaid,
+    enable,
+    free,
+    new_year,
+    renew,
+    reset_password,
+    reset_shell,
+    search,
+    update,
 )
-from .disable import disable_user_cli
-from .enable import enable_user_cli
-from .free import check_free_cli
-from .renew import renew_user_cli
-from .reset import reset_password_cli, reset_shell_cli
-from .search import search_dcu_cli, search_rb_cli
-from .update import update_user_cli
 from .version import PACKAGE_INFO, __author__, __version__
 
 
@@ -70,77 +72,82 @@ def parse_args():
     )
     subparsers = parser.add_subparsers()
 
-    search = subparsers.add_parser("search", help="Search ldap for user")
-    search.add_argument("--altmail", help="Users email address", type=str)
-    search.add_argument("--uid", help="Users username", type=str)
-    search.add_argument("--id", help="DCU id Number", type=str)
-    search.add_argument("--fullname", help="User's fullname", type=str)
-    search.add_argument("--noob", help="filter for new users", action="store_true")
-    search.add_argument("--dcu", help="Query DCU Active Directory", action="store_true")
-    search.set_defaults(
-        func=lambda args: search_dcu_cli(args) if args.dcu else search_rb_cli(args)
+    search_parser = subparsers.add_parser("search", help="Search ldap for user")
+    search_parser.add_argument("--altmail", help="Users email address", type=str)
+    search_parser.add_argument("--uid", help="Users username", type=str)
+    search_parser.add_argument("--id", help="DCU id Number", type=str)
+    search_parser.add_argument("--fullname", help="User's fullname", type=str)
+    search_parser.add_argument(
+        "--noob", help="filter for new users", action="store_true"
     )
+    search_parser.add_argument(
+        "--dcu", help="Query DCU Active Directory", action="store_true"
+    )
+    search_parser.set_defaults(func=search)
 
-    free = subparsers.add_parser("free", help="check if a username is free")
-    free.add_argument("username", type=str)
-    free.set_defaults(func=check_free_cli)
+    free_parser = subparsers.add_parser("free", help="check if a username is free")
+    free_parser.add_argument("username", type=str)
+    free_parser.set_defaults(func=free)
 
-    add = subparsers.add_parser("add", help="Add user to ldap")
-    add.add_argument("username", type=str)
-    add.set_defaults(func=add_user_cli)
+    add_parser = subparsers.add_parser("add", help="Add user to ldap")
+    add_parser.add_argument("username", type=str)
+    add_parser.set_defaults(func=add)
 
-    disable = subparsers.add_parser("disable", help="Disable a Users ldap account")
-    disable.add_argument("username", type=str)
-    disable.set_defaults(func=disable_user_cli)
+    disable_parser = subparsers.add_parser(
+        "disable", help="Disable a Users ldap account"
+    )
+    disable_parser.add_argument("username", type=str)
+    disable_parser.set_defaults(func=disable)
 
-    renable = subparsers.add_parser("renable", help="Renable a Users ldap account")
-    renable.add_argument("username", type=str)
-    renable.set_defaults(func=enable_user_cli)
+    enable_parser = subparsers.add_parser("enable", help="Renable a Users ldap account")
+    enable_parser.add_argument("username", type=str)
+    enable_parser.set_defaults(func=enable)
 
-    renew = subparsers.add_parser("renew", help="renew a LDAP user")
-    renew.add_argument("username", type=str)
-    renew.set_defaults(func=renew_user_cli)
+    renew_parser = subparsers.add_parser("renew", help="renew a LDAP user")
+    renew_parser.add_argument("username", type=str)
+    renew_parser.set_defaults(func=renew)
 
-    reset_pass = subparsers.add_parser("reset", help="reset a users password")
-    reset_pass.add_argument("username", type=str)
-    reset_pass.set_defaults(func=reset_password_cli)
+    reset_parser = subparsers.add_parser("reset", help="reset a users password")
+    reset_parser.add_argument("username", type=str)
+    reset_parser.set_defaults(func=reset_password)
 
-    reset_shell = subparsers.add_parser("reset-shell", help="reset a users shell")
-    reset_shell.add_argument("username", type=str)
-    reset_shell.set_defaults(func=reset_shell_cli)
+    reset_shell_parser = subparsers.add_parser(
+        "reset-shell", help="reset a users shell"
+    )
+    reset_shell_parser.add_argument("username", type=str)
+    reset_shell_parser.set_defaults(func=reset_shell)
 
-    update = subparsers.add_parser("update", help="Update a user in ldap")
-    update.add_argument("username", type=str)
-    update.set_defaults(func=update_user_cli)
+    update_parser = subparsers.add_parser("update", help="Update a user in ldap")
+    update_parser.add_argument("username", type=str)
+    update_parser.set_defaults(func=update)
 
     # Batch commands
-    alert_unpaid = subparsers.add_parser(
+    subparsers.add_parser(
         "alert-unpaid",
         help="Alert all unpaid users that their accounts will be disabled",
+        func=alert_unpaid,
     )
-    alert_unpaid.set_defaults(func=alert_unpaid_users_cli)
-
-    delete_unpaid = subparsers.add_parser(
+    subparsers.add_parser(
         "delete-unpaid",
         help="Delete all unpaid users accounts that are outside their grace period",
+        func=delete_unpaid,
     )
-    delete_unpaid.set_defaults(func=delete_unpaid_users_cli)
 
-    disable_unpaid = subparsers.add_parser(
-        "disable-unpaid", help="Diable all unpaid users accounts"
+    subparsers.add_parser(
+        "disable-unpaid", help="Diable all unpaid users accounts", func=disable_unpaid
     )
-    disable_unpaid.set_defaults(func=disable_unpaid_users_cli)
 
-    new_year = subparsers.add_parser(
+    subparsers.add_parser(
         "new-year",
         help="Decriment Years Paid of all users to 1",
         description="Migrate all users to no longer be marked as newbies and mark all users as unpaided. To Be run at the beginning of each year prior to C&S",
+        func=new_year,
     )
-    new_year.set_defaults(func=new_year_cli)
 
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    ARGS = parse_args()
-    ARGS.func(ARGS)
+    args = parse_args()
+    loop = get_event_loop()
+    loop.run_until_complete(args.func(args))

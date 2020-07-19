@@ -1,12 +1,10 @@
 """Redbrick ldap search"""
 
-
-def search_rb_cli(args):
-    """cli interface for searchong redbrick ldap"""
+from bonsai.ldapconnection import LDAPConnection
 
 
-def search_rb(
-    ldap_conn,
+async def search_rb(
+    ldap_conn: LDAPConnection,
     uid: str = None,
     dcu_id: str = None,
     altmail: str = None,
