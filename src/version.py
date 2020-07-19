@@ -2,7 +2,7 @@
 
 TEAM_EMAIL = "admins@redbrick.dcu.ie"
 PROJECT_HOME = "https://github.com/redbrick/rb-ldap-python"
-PACKAGE_INFO = "Redbrick LDAP cli"
+PACKAGE_INFO = "Command line interface for Redbrick LDAP"
 PACKAGE_LICENSE = "Apache 2"
 OWNERS = [
     dict(name="Redbrick", email=TEAM_EMAIL),

@@ -24,13 +24,13 @@ Script to interact with Redbrick LDAP.
 
 ## Run
 
-```console
+```bash
 rbldap [global options] command [command options] [arguments...]
 ```
 
 Run `rbldap -h` to get a list of flags and commands.
 
-```console
+```bash
 $ rbldap --help
 NAME:
    rbldap - Command line interface for Redbrick LDAP
@@ -41,8 +41,8 @@ USAGE:
 
 COMMANDS:
      add               Add user to ldap
-     disable, disuser  Disable a Users ldap account
-     renable, reuser   Renable a Users ldap account
+     disable           Disable a Users ldap account
+     renable           Renable a Users ldap account
      renew             renew a LDAP user
      reset             reset a users password
      reset-shell       reset a users shell
