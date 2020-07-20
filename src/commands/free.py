@@ -8,8 +8,10 @@ from ..accounts import check_username_free
 async def free(rb_client: LDAPClient, username: str):
     """
     check if a username is free
-    ---
-    username: Redbrick username to check if free
+
+    Args:
+        rb_client: ldap client configured for redbrick ldap
+        username: Redbrick username to check if free
     """
     async with rb_client.connect(is_async=True) as conn:
         if await check_username_free(conn, username):

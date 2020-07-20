@@ -4,6 +4,7 @@
 async def update(username: str):
     """
     Update a user in ldap
-    ---
-    username: account to be updated
+
+    Args:
+        username: account to be updated
     """

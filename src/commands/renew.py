@@ -4,6 +4,7 @@
 async def renew(username: str):
     """
     Renew a LDAP user
-    ---
-    username: account to renew
+
+    Args:
+        username: account to renew
     """

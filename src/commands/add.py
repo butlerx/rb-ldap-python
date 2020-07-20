@@ -4,6 +4,7 @@
 async def add(username: str):
     """
     Add user to ldap
-    ---
-    username: username of user to be created
+
+    Args:
+        username: username of user to be created
     """
