@@ -37,8 +37,8 @@ test: install  ## Run tests
 
 .PHONY: clean
 clean:  ##  Delete all environment files
-	rm -rf .venv dist
-	find -iname "*.pyc" -delete
+	rm -rf .venv dist build __pycache__ **/*.egg-info/ **/__pycache__
+	find . -name '*.py[c|o]' -delete
 
 .PHONY: help
 help: ## Display this help screen
