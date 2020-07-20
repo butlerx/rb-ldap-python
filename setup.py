@@ -28,7 +28,7 @@ module = SourceFileLoader(
 requirements = load_requirements("requirements.txt")
 
 setup(
-    name="rbldap",
+    name=module.PACKAGE_NAME,
     description=module.PACKAGE_INFO,
     long_description=open("README.md").read(),
     author=module.__author__,

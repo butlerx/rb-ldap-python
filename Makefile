@@ -25,7 +25,7 @@ run: .dep_installed
 	@touch $^
 
 test: .dep_installed  ## Run tests
-	. venv/bin/activate
+	. .venv/bin/activate
 	py.test -s \
 		--cache-clear \
 		--pep8 \

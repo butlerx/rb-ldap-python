@@ -1,7 +1,7 @@
 """new year automation"""
 
 
-def new_year(args):
+def new_year():
     """
     Preform yearly update:
       - set newbie to false

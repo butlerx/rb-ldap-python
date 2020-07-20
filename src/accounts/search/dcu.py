@@ -4,12 +4,12 @@ from typing import List
 
 from bonsai.ldapconnection import LDAPConnection
 
-from ..types import DCU_ATTR, DCUUSer
+from ..types import DCU_ATTR, DCUUser
 
 
 async def search_dcu(
     ldap_conn: LDAPConnection, dcu_id: str = None, uid: str = None, fullname: str = None
-) -> List[DCUUSer]:
+) -> List[DCUUser]:
     """Seach DCU ldap for user"""
     query = list(
         filter(

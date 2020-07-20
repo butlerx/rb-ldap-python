@@ -1,7 +1,7 @@
 """delete unpaid automation"""
 
 
-async def delete_unpaid(args):
+async def delete_unpaid():
     """
-    Delete all accounts with years paid of -1
+    Delete all unpaid users accounts that are outside their grace period (years paid = -1)
     """

@@ -1,7 +1,7 @@
 """disable unpaid automation"""
 
 
-async def disable_unpaid(args):
+async def disable_unpaid():
     """
-    disable all accounts with years paid at 0.
+    Diable all unpaid users accounts (years paid = 0)
     """

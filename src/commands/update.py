@@ -1,5 +1,9 @@
 """update command"""
 
 
-async def update(args):
-    """cli interface for updating user"""
+async def update(username: str):
+    """
+    Update a user in ldap
+    ---
+    username: account to be updated
+    """

@@ -1,5 +1,9 @@
 """renew command"""
 
 
-async def renew(args):
-    """cli interface for renewing user"""
+async def renew(username: str):
+    """
+    Renew a LDAP user
+    ---
+    username: account to renew
+    """
