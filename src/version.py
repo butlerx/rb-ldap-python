@@ -2,6 +2,7 @@
 
 TEAM_EMAIL = "admins@redbrick.dcu.ie"
 PROJECT_HOME = "https://github.com/redbrick/rb-ldap-python"
+PACKAGE_NAME = "rb-ldap"
 PACKAGE_INFO = "Command line interface for Redbrick LDAP"
 PACKAGE_LICENSE = "Apache 2"
 OWNERS = [

@@ -1,9 +1,8 @@
 """ldap user"""
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import List
-
-import attr
 
 RB_ATTR = [
     "uid",
@@ -32,7 +31,7 @@ RB_ATTR = [
 ]
 
 
-@attr.s(auto_attribs=True)
+@dataclass
 class RBUser:
     """Redbrick LDAP user info"""
 

@@ -1,5 +1,5 @@
 """reset functions"""
 from .passwd import reset_password
-from .shell import reset_shell
+from .shell import set_shell
 
-__all__ = ["reset_shell", "reset_password"]
+__all__ = ["set_shell", "reset_password"]

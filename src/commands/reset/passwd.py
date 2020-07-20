@@ -1,4 +1,9 @@
 """reset command"""
 
-async def reset_password(args):
-    """Reset user password"""
+
+async def reset_password(username: str):
+    """
+    Reset a users password
+    ---
+    username: username of account to reset
+    """

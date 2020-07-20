@@ -1,5 +1,9 @@
 """enable command"""
 
 
-async def enable(args):
-    """cli interface for enabling user"""
+async def enable(username: str):
+    """
+    Renable a Users LDAP Account
+    ---
+    username: username of user to enable
+    """

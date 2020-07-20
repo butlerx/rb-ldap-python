@@ -1,8 +1,7 @@
 """dcu ad user"""
 
 import re
-
-import attr
+from dataclasses import dataclass
 
 DCU_ATTR = [
     "employeeNumber",
@@ -12,12 +11,12 @@ DCU_ATTR = [
 ]
 
 
-@attr.s(auto_attribs=True)
+@dataclass
 class DCUUser:
     """DCU AD user info"""
 
     role: str
-    displayName: str  # Full name
+    display_name: str  # Full name
     mail: str  # DCU email
     id: int  # DCU ID number
     course: str  # DCU course code
@@ -27,7 +26,7 @@ class DCUUser:
         return f"""User Information
 ================
 role: {self.role}
-displayName: {self.displayName}
+displayName: {self.display_name}
 mail: {self.mail}
 id: {self.id}
 course: {self.course}
@@ -39,11 +38,11 @@ year: {self.year}"""
         match = re.search(
             "(?P<course>[A-Z]+)(?P<year>[0-9]+)", user["physicalDeliveryOfficeName"][0]
         )
-        course_year = match.groupdict() or {"course": "Not found", "year": "Not found"}
         return cls(
             role=user["dn"].rdns[1][1],
-            displayName=user["displayName"][0],
+            display_name=user["displayName"][0],
             mail=user["mail"][0],
             id=user["employeeNumber"][0],
-            **course_year,
+            course=match.groupdict("course"),
+            year=match.groupdict("year"),
         )
