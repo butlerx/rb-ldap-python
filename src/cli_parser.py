@@ -4,7 +4,7 @@ from asyncio import get_event_loop
 from inspect import Parameter, iscoroutinefunction, signature
 from typing import Any, Callable, Dict, List, Optional
 
-import yaml
+from docstring_parser import parse
 from typing_inspect import get_origin
 
 
@@ -20,13 +20,14 @@ class ArgumentParserShim(ArgumentParser):
 class Program(ArgumentParserShim):
     """
     Constructs an argument parser and command runner
-    ---
-    prog: Name of the program, as referred to on the command line
-    description: Short description of the program displayed at the top of help
-    version: String representation without the leading "v" e.g. "1.0.0"
-    author: String of program author
-    bootstrap: function to be called after args are parsed
-    bootstrap_resv: list of reserved arguments that will be in globals
+
+    Args:
+        prog: Name of the program, as referred to on the command line
+        description: Short description of the program displayed at the top of help
+        version: String representation without the leading "v" e.g. "1.0.0"
+        author: String of program author
+        bootstrap: function to be called after args are parsed
+        bootstrap_resv: list of reserved arguments that will be in globals
     """
 
     def __init__(
@@ -70,14 +71,18 @@ class Program(ArgumentParserShim):
         self._register_args(
             self,
             self.bootstrap,
-            yaml.load(self.bootstrap.__doc__, Loader=yaml.SafeLoader),
+            {
+                param.arg_name: param.description
+                for param in parse(self.bootstrap.__doc__).params
+            },
         )
 
     def add_commands(self, *commands: Callable) -> "Program":
         """
         Add a list of commands to program
-        ---
-        commands: List of functions to add
+
+        Args:
+            commands: List of functions to add
         """
         for command in commands:
             self.add_command(command)
@@ -86,15 +91,16 @@ class Program(ArgumentParserShim):
     def add_command(self, command: Callable) -> "Program":
         """
         Adds a command to the cli. Pass the uninitialised class
-        ---
-        command: function to add
+
+        Args:
+            command: function to add
         """
-        doc = command.__doc__.split("---")
-        help_dict = yaml.load(doc[1], Loader=yaml.SafeLoader) if len(doc) >= 2 else {}
+        doc = parse(command.__doc__)
+        help_dict = {param.arg_name: param.description for param in doc.params}
         cmd_parser = self.subparser.add_parser(
             command.__name__.replace("_", "-"),
-            description=doc[0].strip(),
-            help=doc[0].strip(),
+            description=(doc.long_description or doc.short_description).strip(),
+            help=doc.short_description.strip(),
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
         cmd_parser.set_defaults(cmd=command)
@@ -106,9 +112,10 @@ class Program(ArgumentParserShim):
     ) -> "Program":
         """
         Parse raw command line arguments
-        ---
-        args: arguments list. Defaults to sys.argv[1:]
-        namespace: Namespace to use to store arguments
+
+        Args:
+            args: arguments list. Defaults to sys.argv[1:]
+            namespace: Namespace to use to store arguments
         """
         self.parsed_args = super().parse_args(args, namespace)
         self.globals = self.bootstrap(
@@ -119,6 +126,9 @@ class Program(ArgumentParserShim):
     def run_command(self) -> int:
         """
         Initialise the command with the parsed args plus any extra kwargs
+
+        Returns:
+            Return code from the command's run method
         """
 
         kwargs = self._get_func_args(self.parsed_args.cmd, self.parsed_args)

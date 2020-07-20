@@ -11,6 +11,18 @@ async def search_dcu(
     ldap_conn: LDAPConnection, dcu_id: str = None, uid: str = None, fullname: str = None
 ) -> List[DCUUser]:
     """Seach DCU ldap for user"""
+    """
+    Seach DCU AD for user
+
+    Args:
+        ldap_conn: LDAP connection to use for searching
+        uid: Usersname to search for
+        dcu_id: dcu student id number
+        fullname: Users full name
+
+    Returns:
+        A list of user found in ad matching search criteria
+    """
     query = list(
         filter(
             None,

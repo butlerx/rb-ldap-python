@@ -15,7 +15,20 @@ async def search_rb(
     fullname: str = None,
     noob: bool = False,
 ) -> List[RBUser]:
-    """Seach RB ldap for user"""
+    """
+    Seach RB ldap for user
+
+    Args:
+        ldap_conn: LDAP connection to use for searching
+        uid: Usersname to search for
+        dcu_id: dcu student id number
+        altmail: User email for contact
+        fullname: Users full name
+        noob: filter for just new users
+
+    Returns:
+        A list of user found in ldap matching search criteria
+    """
     query = list(
         filter(
             None,

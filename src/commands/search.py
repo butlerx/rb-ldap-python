@@ -20,13 +20,16 @@ async def search(
 ):
     """
     Search ldap for user
-    ---
-    dcu: Query DCU Active Directory
-    altmail: Users email address
-    uid: Users username
-    id: DCU id Number
-    fullname: User's fullname
-    noob: filter for new users
+
+    Args:
+        rb_client: ldap client configured for redbrick ldap
+        dcu_client: ldap client configured for dcu ad
+        dcu: Query DCU Active Directory
+        altmail: Users email address
+        uid: Users username
+        id: DCU id Number
+        fullname: User's fullname
+        noob: filter for new users
     """
     if dcu:
         async with dcu_client.connect(is_async=True) as conn:

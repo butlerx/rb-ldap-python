@@ -34,16 +34,22 @@ def build_globals(
     dry_run: bool = False,
 ) -> dict:
     """
-    user: ldap user, used for authentication
-    dcu_user: Active Directory user for DCU, used for authentication
-    host: ldap host to query
-    dcu_host: DCU Active Directory host to query
-    port: Port for ldap host
-    dcu_port: Port for DCU Active Directory host
-    password: path to file containing the password for the ldap server
-    dcu_password: path to file containing the password for the DCU AD server"
-    smtp: smtp server to send email with
-    dry_run: output to console rather then file
+    Setup Shared clients
+
+    Args:
+        user: ldap user, used for authentication
+        dcu_user: Active Directory user for DCU, used for authentication
+        host: ldap host to query
+        dcu_host: DCU Active Directory host to query
+        port: Port for ldap host
+        dcu_port: Port for DCU Active Directory host
+        password: path to file containing the password for the ldap server
+        dcu_password: path to file containing the password for the DCU AD server"
+        smtp: smtp server to send email with
+        dry_run: output to console rather then file
+
+    Returns:
+        Dictionary of objects that can be accessed from commads
     """
     return dict(
         rb_client=ldap_client(host, port, user, password),
