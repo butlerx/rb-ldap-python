@@ -1,4 +1,4 @@
-# rbldap
+# rb-ldap
 
 Script to interact with Redbrick LDAP.
 

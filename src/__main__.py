@@ -61,26 +61,19 @@ if __name__ == "__main__":
         author=__author__,
         bootstrap=build_globals,
         bootstrap_resv=["rb_client", "dcu_client", "smtp_client"],
-    ).add_command(search).add_command(free).add_command(add).add_command(
-        disable
-    ).add_command(
-        enable
-    ).add_command(
-        renew
-    ).add_command(
-        reset_password
-    ).add_command(
-        reset_shell
-    ).add_command(
-        update
-    ).add_command(  # Batch Commands
-        alert_unpaid
-    ).add_command(
-        delete_unpaid
-    ).add_command(
-        disable_unpaid
-    ).add_command(
-        new_year
-    ).parse_args().run_command(
-        is_async=True
-    )
+    ).add_commands(
+        search,
+        free,
+        add,
+        disable,
+        enable,
+        renew,
+        reset_password,
+        reset_shell,
+        update,
+        # Batch Commands
+        alert_unpaid,
+        delete_unpaid,
+        disable_unpaid,
+        new_year,
+    ).parse_args().run_command()

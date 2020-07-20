@@ -1,12 +1,7 @@
 """Command Line Interface generator and dependency injection"""
-from argparse import (
-    ArgumentDefaultsHelpFormatter,
-    ArgumentParser,
-    HelpFormatter,
-    Namespace,
-)
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
 from asyncio import get_event_loop
-from inspect import Parameter, signature
+from inspect import Parameter, iscoroutinefunction, signature
 from typing import Any, Callable, Dict, List, Optional
 
 import yaml
@@ -25,15 +20,13 @@ class ArgumentParserShim(ArgumentParser):
 class Program(ArgumentParserShim):
     """
     Constructs an argument parser and command runner
-
-    :param prog: Name of the program, as referred to on the command line
-    :param description: Short description of the program displayed at the top of help
-    :param version: String representation without the leading "v" e.g. "1.0.0"
-    :param author: String of program author
-    :param bootstrap: function to be called after args are parsed
-    :param bootstrap_resv: list of reserved argurements that will be in globals
-    :ivar globals: Internal globals to be injected in to commands
-    :ivar parsed_args: The parsed args, populated after calling parse()
+    ---
+    prog: Name of the program, as referred to on the command line
+    description: Short description of the program displayed at the top of help
+    version: String representation without the leading "v" e.g. "1.0.0"
+    author: String of program author
+    bootstrap: function to be called after args are parsed
+    bootstrap_resv: list of reserved arguments that will be in globals
     """
 
     def __init__(
@@ -80,10 +73,21 @@ class Program(ArgumentParserShim):
             yaml.load(self.bootstrap.__doc__, Loader=yaml.SafeLoader),
         )
 
+    def add_commands(self, *commands: Callable) -> "Program":
+        """
+        Add a list of commands to program
+        ---
+        commands: List of functions to add
+        """
+        for command in commands:
+            self.add_command(command)
+        return self
+
     def add_command(self, command: Callable) -> "Program":
         """
         Adds a command to the cli. Pass the uninitialised class
-        :param command: function to add
+        ---
+        command: function to add
         """
         doc = command.__doc__.split("---")
         help_dict = yaml.load(doc[1], Loader=yaml.SafeLoader) if len(doc) >= 2 else {}
@@ -102,9 +106,9 @@ class Program(ArgumentParserShim):
     ) -> "Program":
         """
         Parse raw command line arguments
-
-        :param args: arguments list. Defaults to sys.argv[1:]
-        :param namespace: Namespace to use to store arguments
+        ---
+        args: arguments list. Defaults to sys.argv[1:]
+        namespace: Namespace to use to store arguments
         """
         self.parsed_args = super().parse_args(args, namespace)
         self.globals = self.bootstrap(
@@ -112,16 +116,13 @@ class Program(ArgumentParserShim):
         )
         return self
 
-    def run_command(self, is_async: bool = False) -> int:
+    def run_command(self) -> int:
         """
         Initialise the command with the parsed args plus any extra kwargs
-
-        :param is_async: If the function being run is async
-        :return: Return code from the command's run method
         """
 
         kwargs = self._get_func_args(self.parsed_args.cmd, self.parsed_args)
-        if is_async:
+        if iscoroutinefunction(self.parsed_args.cmd):
             loop = get_event_loop()
             return loop.run_until_complete(self.parsed_args.cmd(**kwargs))
         return self.parsed_args.cmd(**kwargs)
