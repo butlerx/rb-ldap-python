@@ -4,3 +4,4 @@ bonsai ~= 1.2.0
 
 black ~= 19.10b0
 pyyaml
+typing_inspect
