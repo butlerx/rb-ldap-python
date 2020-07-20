@@ -1,5 +1,10 @@
 """Command Line Interface generator and dependency injection"""
-from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
+from argparse import (
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    Namespace,
+    RawDescriptionHelpFormatter,
+)
 from asyncio import get_event_loop
 from inspect import Parameter, iscoroutinefunction, signature
 from typing import Any, Callable, Dict, List, Optional
@@ -10,11 +15,13 @@ from typing_inspect import get_origin
 
 # Fixes https://bugs.python.org/issue9571
 class ArgumentParserShim(ArgumentParser):
+    """shim or argparser"""
+
     def _get_values(self, action, arg_strings):
         if arg_strings and arg_strings[0] == "--":
             arg_strings = arg_strings[1:]
         # noinspection PyProtectedMember
-        return super(ArgumentParserShim, self)._get_values(action, arg_strings)
+        return super()._get_values(action, arg_strings)
 
 
 class Program(ArgumentParserShim):
@@ -32,19 +39,15 @@ class Program(ArgumentParserShim):
 
     def __init__(
         self,
-        prog: str,
-        description: str,
         version: str,
         author: str,
         bootstrap: Callable = None,
         bootstrap_resv: List[str] = [],
         **kwargs,
     ):
-        super(Program, self).__init__(
-            prog=prog,
-            description=description,
-            formatter_class=ArgumentDefaultsHelpFormatter,
-            epilog=f"Built by {author}",
+        super().__init__(
+            formatter_class=RawDescriptionHelpFormatter,
+            epilog=f"Version {version}\nBuilt by {author}",
             **kwargs,
         )
         self.parsed_args: Optional[Namespace] = None

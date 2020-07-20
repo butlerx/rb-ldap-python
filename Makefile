@@ -7,24 +7,22 @@ MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
 PYTHON := python3
+WHEEL := dist/rbldap-*.whl
+
+build: $(WHEEL)  ## Build Wheel
+$(WHEEL): pyproject.toml
+	flit build
 
 .PHONY: install
-install: requirements.txt setup.py ## Install rb-ldap locally
-	$(PYTHON) -m pip install --user .
-
-run: .dep_installed
-	.venv/bin/python -m src --help
+install: pyproject.toml .venv/bin/activate ## Install Dependencies for testing
+	flit install --python .venv/bin/python
 
 .venv/bin/activate:
 	$(PYTHON) -m venv .venv
 	.venv/bin/python -m pip install --upgrade pip
 	. .venv/bin/activate;
 
-.dep_installed: requirements.txt .venv/bin/activate
-	.venv/bin/python -m pip install -Ur requirements.txt
-	@touch $^
-
-test: .dep_installed  ## Run tests
+test: install  ## Run tests
 	. .venv/bin/activate
 	py.test -s \
 		--cache-clear \
@@ -39,7 +37,7 @@ test: .dep_installed  ## Run tests
 
 .PHONY: clean
 clean:  ##  Delete all environment files
-	rm -rf .venv
+	rm -rf .venv dist
 	find -iname "*.pyc" -delete
 
 .PHONY: help

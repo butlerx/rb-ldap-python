@@ -1,0 +1,57 @@
+
+[build-system]
+requires = ["flit_core >=2,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "rbldap"
+description-file = 'README.md'
+author = "Redbrick"
+author-email = "admins@redbrick.dcu.ie"
+home-page = "https://github.com/redbrick/rb-ldap-python"
+
+requires=[
+  'bonsai (~= 1.2.0)',
+  'black (~= 19.10b0)',
+  'typing_inspect (~= 0.7.2)',
+]
+requires-python=">3.8.*, <4"
+
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  'Programming Language :: Python',
+]
+license = "Apache 2"
+
+[tool.flit.scripts]
+rb-ldap = "rbldap.__main__:main"
+
+[tool.flit.metadata.requires-extra]
+test = [
+    "pytest >=2.7.3",
+    "pytest-cov",
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''

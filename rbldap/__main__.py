@@ -1,5 +1,6 @@
 """rbldap entrypoint"""
 
+from . import PACKAGE_NAME, __author__, __doc__, __version__
 from .accounts.clients import ldap_client
 from .cli_parser import Program
 from .commands import (
@@ -17,7 +18,6 @@ from .commands import (
     search,
     update,
 )
-from .version import PACKAGE_INFO, PACKAGE_NAME, __author__, __version__
 
 
 def build_globals(
@@ -61,8 +61,8 @@ def build_globals(
 
 if __name__ == "__main__":
     Program(
-        prog=PACKAGE_NAME,
-        description=PACKAGE_INFO,
+        prog="rb-ldap",
+        description=__doc__,
         version=__version__,
         author=__author__,
         bootstrap=build_globals,

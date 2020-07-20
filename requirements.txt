@@ -1,5 +1,0 @@
---index-url=https://pypi.python.org/simple
-
-bonsai ~= 1.2.0
-black ~= 19.10b0
-typing_inspect ~= 0.7.2
