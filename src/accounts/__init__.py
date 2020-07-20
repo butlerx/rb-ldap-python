@@ -11,6 +11,7 @@ from .enable import enable_user
 from .free import check_username_free
 from .renew import renew_user
 from .reset import reset_password, reset_shell
+from .search import search_dcu, search_rb
 from .update import update_user
 
 __all__ = [
@@ -25,5 +26,7 @@ __all__ = [
     "renew_user",
     "reset_password",
     "reset_shell",
+    "search_dcu",
+    "search_rb",
     "update_user",
 ]

@@ -1,3 +1,4 @@
 --index-url=https://pypi.python.org/simple
 
 bonsai =~ 1.2.0
+attr
