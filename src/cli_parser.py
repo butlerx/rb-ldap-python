@@ -1,10 +1,16 @@
 """Command Line Interface generator and dependency injection"""
-from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser, Namespace
+from argparse import (
+    ArgumentDefaultsHelpFormatter,
+    ArgumentParser,
+    HelpFormatter,
+    Namespace,
+)
 from asyncio import get_event_loop
 from inspect import Parameter, signature
 from typing import Any, Callable, Dict, List, Optional
 
 import yaml
+from typing_inspect import get_origin
 
 
 # Fixes https://bugs.python.org/issue9571
@@ -38,12 +44,14 @@ class Program(ArgumentParserShim):
         author: str,
         bootstrap: Callable = None,
         bootstrap_resv: List[str] = [],
+        **kwargs,
     ):
         super(Program, self).__init__(
             prog=prog,
             description=description,
             formatter_class=ArgumentDefaultsHelpFormatter,
             epilog=f"Built by {author}",
+            **kwargs,
         )
         self.parsed_args: Optional[Namespace] = None
 
@@ -145,6 +153,13 @@ class Program(ArgumentParserShim):
                         help=help_dict.get(arg.name, None),
                         action="store_false",
                     ),
+                elif arg.annotation == list or get_origin(arg.annotation) == list:
+                    parser.add_argument(
+                        f"--{arg.name.replace('_', '-')}",
+                        help=help_dict.get(arg.name, None),
+                        nargs="+",
+                        default=arg.default,
+                    )
                 else:
                     parser.add_argument(
                         f"--{arg.name.replace('_', '-')}",
@@ -156,9 +171,17 @@ class Program(ArgumentParserShim):
                 Parameter.POSITIONAL_OR_KEYWORD,
                 Parameter.POSITIONAL_ONLY,
             ]:
-                parser.add_argument(
-                    arg.name.replace("_", "-"),
-                    help=help_dict.get(arg.name, None),
-                    type=arg.annotation,
-                    default=arg.default,
-                )
+                if arg.annotation == list or get_origin(arg.annotation) == list:
+                    parser.add_argument(
+                        arg.name.replace("_", "-"),
+                        help=help_dict.get(arg.name, None),
+                        nargs="+",
+                        default=arg.default,
+                    )
+                else:
+                    parser.add_argument(
+                        arg.name.replace("_", "-"),
+                        help=help_dict.get(arg.name, None),
+                        type=arg.annotation,
+                        default=arg.default,
+                    )

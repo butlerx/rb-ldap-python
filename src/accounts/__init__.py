@@ -10,7 +10,7 @@ from .disable import disable_user
 from .enable import enable_user
 from .free import check_username_free
 from .renew import renew_user
-from .reset import reset_password, reset_shell
+from .reset import reset_password, set_shell
 from .search import search_dcu, search_rb
 from .update import update_user
 
@@ -25,7 +25,7 @@ __all__ = [
     "new_year",
     "renew_user",
     "reset_password",
-    "reset_shell",
+    "set_shell",
     "search_dcu",
     "search_rb",
     "update_user",
