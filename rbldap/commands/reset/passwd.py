@@ -1,6 +1,6 @@
 """reset command"""
 
-from bonsai import LDAPClient, LDAPEntry, LDAPModOp
+from bonsai import LDAPClient, LDAPModOp
 
 from ...accounts import generate_passwd
 from ...accounts.errors import UserNotFound
@@ -37,7 +37,11 @@ async def reset_password(
         user = results[0]
         password = generate_passwd(12)
         user.change_attribute("userPassword", LDAPModOp.REPLACE, password)
-        user.modify()
-    async with smtp_client:
-        await smtp_client.send_password_reset(user["altmail"], username, password)
+        if commit:
+            user.modify()
+            async with smtp_client:
+                await smtp_client.send_password_reset(
+                    user["altmail"], username, password
+                )
+    print(f"{username} password has been reset")
     return 0
