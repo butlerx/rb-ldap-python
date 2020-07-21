@@ -2,7 +2,7 @@
 
 from bonsai import LDAPClient
 
-from ...accounts.errors import UserNotFound
+from ...accounts import set_shell
 
 
 async def reset_shell(
@@ -28,17 +28,6 @@ async def reset_shell(
         UserNotFound: No user was found matching the username
     """
     async with rb_client.connect(is_async=True) as conn:
-        results = await conn.search(
-            "ou=accounts,o=redbrick",
-            2,
-            f"((uid={username})|(gecos={username}))",
-            attrlist=["loginShell"],
-        )
-        if not results:
-            raise UserNotFound()
-        user = results[0]
-        user["loginShell"] = shell
-        if commit:
-            user.modify()
+        await set_shell(conn, username, shell, commit=commit)
     print(f"{username} shell set to {shell}")
     return 0
