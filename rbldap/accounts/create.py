@@ -44,4 +44,4 @@ async def create_account(
     mailing_list = mailman.get_list("announce-redbrick")
     mailing_list.subscribe(f"{new_user.uid}@redbrick.dcu.ie")
     async with smtp:
-        await smtp.email_account_details(new_user)
+        await smtp.send_account_details(new_user)
