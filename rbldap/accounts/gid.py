@@ -1,4 +1,7 @@
 """redbrick GID"""
+import subprocess
+from functools import lru_cache
+
 GROUPS = [
     ("associat", 107),
     ("club", 102),
@@ -14,6 +17,7 @@ GROUPS = [
 ]
 
 
+@lru_cache(maxsize=128)
 def gid_to_usertype(gid: int) -> str:
     """
     convert gid to usertype
@@ -24,10 +28,15 @@ def gid_to_usertype(gid: int) -> str:
     Returns:
         The name of the group or an empty string if none found
     """
+    group_query = subprocess.run(
+        f"getent group {gid}", shell=True, encoding="utf8", stdout=subprocess.PIPE
+    )
+    if group_query.returncode == 0:
+        return group_query.stdout.split(":")[0]
     for group in GROUPS:
         if group[1] == gid:
             return group[0]
-    return ""
+    return "nobody"
 
 
 def usertype_to_gid(group_name: str) -> int:

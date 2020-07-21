@@ -13,6 +13,7 @@ from .commands import (
     disable_unpaid,
     enable,
     free,
+    generate,
     new_year,
     renew,
     reset_password,
@@ -72,7 +73,16 @@ if __name__ == "__main__":
         bootstrap=build_globals,
         bootstrap_resv=["rb_client", "dcu_client", "smtp_client", "mailman", "commit"],
     ).add_commands(
-        add, search, renew, free, enable, disable, reset_password, reset_shell, update,
+        add,
+        search,
+        renew,
+        free,
+        enable,
+        disable,
+        reset_password,
+        reset_shell,
+        update,
+        generate,
     ).add_commands(
         # Batch Commands
         alert_unpaid,

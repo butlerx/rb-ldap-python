@@ -1,6 +1,6 @@
 usage: rb-ldap [-h] [--version] [--user USER] [--dcu-user DCU_USER] [--host HOST]
-               [--dcu-host DCU_HOST] [--port PORT] [--dcu-port DCU_PORT]
-               [--password PASSWORD] [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
+               [--dcu-host DCU_HOST] [--port PORT] [--dcu-port DCU_PORT] [--password PASSWORD]
+               [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
                COMMAND ...
 
 Command line interface for Redbrick LDAP
@@ -32,6 +32,7 @@ command:
     reset-password      Reset a users password
     reset-shell         Reset a user's login shell
     update              Update a user in ldap
+    generate            Generate nix config for user vhosts based off ldap
     alert-unpaid        Send email to all users with unpaid account altmails telling them
                         their account is unpaid
     delete-unpaid       Delete all unpaid users accounts that are outside their grace period
