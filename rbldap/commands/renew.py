@@ -4,7 +4,6 @@ from bonsai import LDAPClient
 
 from ..accounts import search_dcu
 from ..accounts.errors import UserNotFound
-from ..accounts.types import RBUser
 from ..mail import RBMail
 
 
