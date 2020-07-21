@@ -1,10 +1,11 @@
 """search command"""
 
-from typing import List
+from typing import List, Union
 
 from bonsai import LDAPClient
 
 from ..accounts import search_dcu, search_rb
+from ..accounts.types import DCUUser, RBUser
 
 
 async def search(
@@ -31,12 +32,12 @@ async def search(
         fullname: User's fullname
         noob: filter for new users
     """
+    results: List[Union[RBUser, DCUUser]] = []
     if dcu:
         async with dcu_client.connect(is_async=True) as conn:
             results = await search_dcu(
                 conn, dcu_id=id, uid=uid, fullname=" ".join(fullname)
             )
-            print("No User found" if not results else results)
     else:
         async with rb_client.connect(is_async=True) as conn:
             results = await search_rb(
@@ -47,4 +48,4 @@ async def search(
                 fullname=" ".join(fullname),
                 noob=noob,
             )
-            print("No User found" if not results else results)
+    print("No User found" if not results else results)

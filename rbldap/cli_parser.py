@@ -1,4 +1,7 @@
-"""Command Line Interface generator and dependency injection"""
+"""
+Command Line Interface generator and dependency injection
+This may seem complex. If you need help understanding or making changes please reach out to @butlerx
+"""
 from argparse import (
     ArgumentDefaultsHelpFormatter,
     ArgumentParser,
@@ -98,12 +101,20 @@ class Program(ArgumentParserShim):
         Args:
             command: function to add
         """
-        doc = parse(command.__doc__)
-        help_dict = {param.arg_name: param.description for param in doc.params}
+        try:
+            doc = parse(command.__doc__)
+            help_dict = {param.arg_name: param.description for param in doc.params}
+            description = (doc.long_description or doc.short_description).strip()
+            help_text = doc.short_description.strip()
+        except Exception:
+            print(f"failed to parse args for {command.__name__}")
+            description = ""
+            help_dict = {}
+            help_text = ""
         cmd_parser = self.subparser.add_parser(
             command.__name__.replace("_", "-"),
-            description=(doc.long_description or doc.short_description).strip(),
-            help=doc.short_description.strip(),
+            description=description,
+            help=help_text,
             formatter_class=ArgumentDefaultsHelpFormatter,
         )
         cmd_parser.set_defaults(cmd=command)

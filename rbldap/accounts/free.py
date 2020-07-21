@@ -10,6 +10,9 @@ async def check_username_free(conn: LDAPConnection, username: str) -> bool:
     Args:
         conn: LDAP connection to use
         username: username to check
+
+    Return:
+        boolean indicating if the username already exists in ldap
     """
     res = await conn.search("ou=accounts,o=redbrick", 2, f"(uid={username})")
     return bool(res)
