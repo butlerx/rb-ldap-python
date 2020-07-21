@@ -4,6 +4,12 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
+from bonsai import LDAPEntry
+
+from ..gid import usertype_to_gid
+from ..passwd import generate_passwd
+from .dcu import DCUUser
+
 RB_ATTR = [
     "uid",
     "usertype",
@@ -89,7 +95,15 @@ shadowLastChange: {self.shadow_last_change}"""
 
     @classmethod
     def from_ldap(cls, user: dict) -> "RBUser":
-        """convert ldap response in to an RBUser"""
+        """
+        convert ldap response in to an RBUser
+
+        Args:
+            user: dictionary returned from bonsai with user info
+
+        Return:
+            User with details from ldap dict
+        """
         date_format = "%Y-%m-%dT%H:%M:%S%z"
         return cls(
             uid=user["uid"][0],
@@ -116,3 +130,89 @@ shadowLastChange: {self.shadow_last_change}"""
             host=user["host"],
             shadow_last_change=user["shadowLastChange"][0],
         )
+
+    @classmethod
+    def from_dcu(
+        cls,
+        student: DCUUser,
+        username: str,
+        uid: int,
+        created_by: str,
+        hosts: List[str],
+    ) -> "RBUser":
+        """
+        Convert dcu account to rb
+        This is used for creating new rb accounts
+
+        Args:
+            student: dcu account to be used for creating rb account
+            username: username to check
+            uid: user id for new user
+            created_by: person creating the account
+            hosts: list of hosts user can access
+
+        Return:
+            User with details from dcu account
+        """
+
+        return cls(
+            uid=username,
+            usertype=student.usertype,
+            object_class=[student.usertype, "posixAccount", "top", "shadowAccount"],
+            newbie=True,
+            cn=student.display_name,
+            altmail=student.mail,
+            id=student.id,
+            course=student.course,
+            year=student.year,
+            years_paid=1,
+            updated_by=created_by,
+            updated=datetime.now(),
+            created_by=created_by,
+            created=datetime.now(),
+            birthday=student.birthday,
+            uid_number=uid,
+            gid_number=usertype_to_gid(student.usertype),
+            gecos=[student.display_name],
+            login_shell="/usr/local/shells/shell",
+            home_directory=f"/home/{student.usertype}/{username[:1]}/{username}",
+            user_password=generate_passwd(12),
+            host=hosts,
+            shadow_last_change=0,
+        )
+
+    def to_ldap(self) -> LDAPEntry:
+        """
+        format class for writing to ldap
+
+        Return:
+            LDAPEntry for writing to ldap
+        """
+        date_format = "%Y-%m-%dT%H:%M:%S%z"
+        user = LDAPEntry(f"uid={self.uid},ou=accounts,o=redbrick")
+        user["uid"] = self.uid
+        user["usertype"] = self.usertype
+        user["objectClass"] = self.object_class
+        user["newbie"] = self.newbie
+        user["cn"] = self.cn
+        user["altmail"] = self.altmail
+        user["id"] = self.id
+        user["course"] = self.course
+        user["year"] = self.year
+        user["yearsPaid"] = self.years_paid
+        user["updatedBy"] = self.updated_by
+        user["updated"] = self.updated.strftime(date_format)
+        user["createdBy"] = self.created_by
+        user["created"] = self.created.strftime(date_format)
+        user["birthday"] = self.birthday.strftime(date_format)
+        user["uidNumber"] = self.uid_number
+        user["gidNumber"] = self.gid_number
+        user["gecos"] = self.gecos
+        user["loginShell"] = self.login_shell
+        user["homeDirectory"] = self.home_directory
+        user["userPassword"] = self.user_password
+        user["host"] = self.host
+        user["shadowLastChange"] = (
+            [self.shadow_last_change] if self.shadow_last_change != 0 else []
+        )
+        return user

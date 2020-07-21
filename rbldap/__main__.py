@@ -1,6 +1,8 @@
 """rbldap entrypoint"""
 
-from . import PACKAGE_NAME, __author__, __doc__, __version__
+from mailmanclient import Client
+
+from . import __author__, __doc__, __version__
 from .accounts.clients import ldap_client
 from .cli_parser import Program
 from .commands import (
@@ -18,6 +20,7 @@ from .commands import (
     search,
     update,
 )
+from .mail import RBMail
 
 
 def build_globals(
@@ -54,8 +57,9 @@ def build_globals(
     return dict(
         rb_client=ldap_client(host, port, user, password),
         dcu_client=ldap_client(dcu_host, dcu_port, dcu_user, dcu_password),
-        smtp_client=smtp,
-        dry_run=dry_run,
+        smtp_client=RBMail(hostname=smtp, port=587, use_tls=False),
+        mailman=Client("http://localhost:9001/3.1", "restadmin", "restpass"),
+        commit=(not dry_run),
     )
 
 
@@ -66,7 +70,7 @@ if __name__ == "__main__":
         version=__version__,
         author=__author__,
         bootstrap=build_globals,
-        bootstrap_resv=["rb_client", "dcu_client", "smtp_client"],
+        bootstrap_resv=["rb_client", "dcu_client", "smtp_client", "mailman", "commit",],
     ).add_commands(
         search,
         free,

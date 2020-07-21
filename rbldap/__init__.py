@@ -1,6 +1,5 @@
 """Command line interface for Redbrick LDAP"""
 
-PACKAGE_NAME = "rb-ldap"
 __version__ = "1.0.0.dev0"
 __author__ = ", ".join(
     f"{name} <{email}>"

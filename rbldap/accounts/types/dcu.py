@@ -1,5 +1,6 @@
 """dcu ad user"""
 
+import datetime
 import re
 from dataclasses import dataclass
 
@@ -8,6 +9,7 @@ DCU_ATTR = [
     "displayName",
     "mail",
     "physicalDeliveryOfficeName",
+    "birthday",  # TODO: double check if correct key
 ]
 
 
@@ -21,6 +23,7 @@ class DCUUser:
     id: int  # DCU ID number
     course: str  # DCU course code
     year: int  # DCU course year number/code
+    birthday: datetime
 
     def __str__(self) -> str:
         return f"""User Information
@@ -45,4 +48,21 @@ year: {self.year}"""
             id=user["employeeNumber"][0],
             course=match.groupdict("course"),
             year=match.groupdict("year"),
+            birthday=user["birthday"][0],
         )
+
+    @property
+    def usertype(self) -> str:
+        """
+        convert dcu role to rb usertype
+
+        Return:
+            the matching usertype of self.role as string
+        """
+        if self.role == "Student":
+            return "member"
+        if self.role == "Staff":
+            return "staff"
+        if self.role == "Alumni":
+            return "associat"
+        return "member"
