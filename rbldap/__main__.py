@@ -70,17 +70,10 @@ if __name__ == "__main__":
         version=__version__,
         author=__author__,
         bootstrap=build_globals,
-        bootstrap_resv=["rb_client", "dcu_client", "smtp_client", "mailman", "commit",],
+        bootstrap_resv=["rb_client", "dcu_client", "smtp_client", "mailman", "commit"],
     ).add_commands(
-        search,
-        free,
-        add,
-        disable,
-        enable,
-        renew,
-        reset_password,
-        reset_shell,
-        update,
+        add, search, renew, free, enable, disable, reset_password, reset_shell, update,
+    ).add_commands(
         # Batch Commands
         alert_unpaid,
         delete_unpaid,
