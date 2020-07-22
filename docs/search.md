@@ -5,8 +5,7 @@ Search ldap for user
 ## Usage
 
 ```
-usage: rb-ldap search [-h] [--dcu] [--id ID] [--uid UID] [--altmail ALTMAIL]
-                      [--fullname FULLNAME [FULLNAME ...]] [--noob]
+usage: rb-ldap search [-h] [--dcu] [--id ID] [--uid UID] [--altmail ALTMAIL] [--fullname FULLNAME [FULLNAME ...]] [--noob]
 
 optional arguments:
   -h, --help            show this help message and exit

@@ -5,9 +5,10 @@ Delete all unpaid users accounts that are outside their grace period (years paid
 ## Usage
 
 ```
-usage: rb-ldap delete-unpaid [-h]
+usage: rb-ldap delete-unpaid [-h] [--verify-delete]
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help       show this help message and exit
+  --verify-delete  Flag to indicate to skip prompt
 
 ```

@@ -1,6 +1,5 @@
-usage: rb-ldap [-h] [--version] [--user USER] [--dcu-user DCU_USER] [--host HOST]
-               [--dcu-host DCU_HOST] [--port PORT] [--dcu-port DCU_PORT] [--password PASSWORD]
-               [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
+usage: rb-ldap [-h] [--version] [--user USER] [--dcu-user DCU_USER] [--host HOST] [--dcu-host DCU_HOST] [--port PORT]
+               [--dcu-port DCU_PORT] [--password PASSWORD] [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
                COMMAND ...
 
 Command line interface for Redbrick LDAP
@@ -33,10 +32,8 @@ command:
     reset-shell         Reset a user's login shell
     update              Update a user in ldap
     generate            Generate nix config for user vhosts based off ldap
-    alert-unpaid        Send email to all users with unpaid account altmails telling them
-                        their account is unpaid
-    delete-unpaid       Delete all unpaid users accounts that are outside their grace period
-                        (years paid = -1)
+    alert-unpaid        Send email to all users with unpaid account altmails telling them their account is unpaid
+    delete-unpaid       Delete all unpaid users accounts that are outside their grace period (years paid = -1)
     disable-unpaid      Diable all unpaid users accounts (years paid = 0)
     new-year            To Be run at the beginning of each year prior to C&S
 
