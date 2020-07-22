@@ -17,6 +17,12 @@ async def renew(
     """
     Renew a LDAP user
 
+    Renable account if its disabled
+    Increase years paid by 1 unless years paid is -1 then set to 1
+    Mail user account details
+    Update usertype if dcu user type changes
+    Update folder location and groups
+
     Args:
         rb_client: ldap client configured for redbrick ldap
         dcu_client: ldap client configured for dcu AD

@@ -1,5 +1,7 @@
 # rb-ldap
 
+[![Build and Test](https://github.com/butlerx/rb-ldap-python/workflows/Build%20and%20Test/badge.svg)](https://github.com/butlerx/rb-ldap-python/actions)
+
 Script to interact with Redbrick LDAP.
 
 ## Features
