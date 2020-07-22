@@ -47,7 +47,7 @@ async def add(
         UnkownID: Thrown is the supplied student id does not return an users
     """
     async with rb_client.connect(is_async=True) as conn:
-        if not (await check_username_free(conn, username)):
+        if not await check_username_free(conn, username):
             raise DuplicateUser()
         async with dcu_client.connect(is_aysnc=True) as dcu_conn:
             students = await search_dcu(dcu_conn, dcu_id=id)
@@ -58,8 +58,10 @@ async def add(
             students[0],
             username,
             uid=uid,
-            created_by=getpwuid(getuid())[0],
-            hosts=["azazel", "pygmalion"],
+            created_by=getpwuid(getuid())[
+                0
+            ],  # TODO: this will return root given we dont have local account any more
+            hosts=["azazel", "pygmalion"],  # TODO: Make hosts configurable
         )
         if commit:
             await create_account(conn, smtp_client, mailman, new_user)

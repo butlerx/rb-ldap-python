@@ -20,8 +20,9 @@ async def disable(rb_client: LDAPClient, commit: bool, username: str) -> int:
     Raises:
         UserNotFound: raised if the user is not found
     """
-    shell = "/usr/local/shells/disusered"
     async with rb_client.connect(is_async=True) as conn:
-        await set_shell(conn, username, shell, commit=commit)
+        await set_shell(
+            conn, username, shell="/usr/local/shells/disusered", commit=commit
+        )
     print(f"{username} account disabled")
     return 0

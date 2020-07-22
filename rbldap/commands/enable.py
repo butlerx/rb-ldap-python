@@ -20,8 +20,7 @@ async def enable(rb_client: LDAPClient, commit: bool, username: str) -> int:
     Raises:
         UserNotFound: No user was found matching the username
     """
-    shell: str = "/usr/local/shells/shell"
     async with rb_client.connect(is_async=True) as conn:
-        await set_shell(conn, username, shell, commit=commit)
-    print(f"{username} shell set to {shell}")
+        await set_shell(conn, username, shell="/usr/local/shells/shell", commit=commit)
+    print(f"{username} Account re-enabled")
     return 0

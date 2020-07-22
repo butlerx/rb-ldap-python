@@ -8,6 +8,17 @@ from ..accounts import gid_to_usertype
 
 
 def user2nix(uid: str, home: str, gid: str) -> str:
+    """
+    Generate nix config for user vhosts based off ldap
+
+    Args:
+        uid: Username of user
+        home: homedir of user
+        gid: user type of user
+
+    Returns:
+        Returns String containing a nix object for inserting in a nix array
+    """
     return f"""  {{
     uid = "{uid}";',
     home = "{home}";',
