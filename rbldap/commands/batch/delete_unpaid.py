@@ -24,7 +24,7 @@ async def delete_unpaid(
     """
 
     if not verify_delete and not bool(
-        input("Delete All Unpaid Users, THIS CANNOT BE UNDONE [y/N]: ")
+        input("Delete all unpaid users, THIS CANNOT BE UNDONE [y/N]: ")
         in ["y", "Y", "yes"]
     ):
         return 1
@@ -36,12 +36,9 @@ async def delete_unpaid(
             "(&((yearspaid=-1))(|(usertype=member)(usertype=associate)(usertype=staff))",
             attrlist=["uid", "yearsPaid", "homeDirectory", "usertype"],
         )
-        await gather(
-            *[
-                del_user(user, mailman=mailman)
-                for user in res
-                if user["yearsPaid"][0] != -1
-            ]
-        )
+        users = [user for user in res if user["yearsPaid"][0] == -1]
+        await gather(*[del_user(user, mailman=mailman) for user in users])
+
+    print(f"{len(users)} accounts deleted")
 
     return 0

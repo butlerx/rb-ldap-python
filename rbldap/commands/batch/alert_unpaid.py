@@ -26,6 +26,10 @@ async def alert_unpaid(rb_client: LDAPClient, smtp_client: RBMail) -> int:
             "(&(|(yearspaid=-1)(yearspaid=0))(|(usertype=member)(usertype=associate)(usertype=staff))",
             attrlist=["uid", "yearsPaid", "cn", "altmail", "id"],
         )
+    users = [
+        user for user in res if user["yearsPaid"][0] == -1 or user["yearsPaid"][0] == 0
+    ]
+
     async with smtp_client:
         await gather(
             *[
@@ -36,9 +40,10 @@ async def alert_unpaid(rb_client: LDAPClient, smtp_client: RBMail) -> int:
                     user["cn"][0],
                     user["id"][0],
                 )
-                for user in res
-                if user["yearsPaid"][0] != -1 or user["yearsPaid"][0] != 0
+                for user in users
             ]
         )
+
+    print(f"{len(users)} accounts disabled")
 
     return 0
