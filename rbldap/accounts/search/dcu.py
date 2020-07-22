@@ -10,7 +10,6 @@ from ..types import DCU_ATTR, DCUUser
 async def search_dcu(
     ldap_conn: LDAPConnection, dcu_id: str = None, uid: str = None, fullname: str = None
 ) -> List[DCUUser]:
-    """Seach DCU ldap for user"""
     """
     Seach DCU AD for user
 
@@ -23,7 +22,7 @@ async def search_dcu(
     Returns:
         A list of user found in ad matching search criteria
     """
-    query = list(
+    query = "".join(
         filter(
             None,
             [
@@ -35,7 +34,5 @@ async def search_dcu(
     )
     if not query:
         return []
-    res = await ldap_conn.search(
-        "o=ad,o=dcu,o=ie", 2, f"({'&'.join(query)})", attrlist=DCU_ATTR
-    )
+    res = await ldap_conn.search("o=ad,o=dcu,o=ie", 2, f"(&{query})", attrlist=DCU_ATTR)
     return [DCUUser.from_ldap(user) for user in res]

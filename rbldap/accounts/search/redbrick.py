@@ -29,7 +29,7 @@ async def search_rb(
     Returns:
         A list of user found in ldap matching search criteria
     """
-    query = list(
+    query = "".join(
         filter(
             None,
             [
@@ -44,6 +44,6 @@ async def search_rb(
     if not query:
         return []
     res = await ldap_conn.search(
-        "ou=accounts,o=redbrick", 2, f"({'&'.join(query)})", attrlist=RB_ATTR
+        "ou=accounts,o=redbrick", 2, f"(&{query})", attrlist=RB_ATTR
     )
     return [RBUser.from_ldap(user) for user in res]

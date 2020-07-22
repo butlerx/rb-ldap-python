@@ -1,6 +1,5 @@
 """delete unpaid automation"""
 from asyncio import gather
-from shutil import rmtree
 
 from bonsai import LDAPClient, LDAPEntry
 from mailmanclient import Client

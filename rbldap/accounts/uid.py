@@ -14,7 +14,10 @@ async def find_available_uid(ldap_conn: LDAPConnection) -> int:
         next avilable uid
     """
     res = await ldap_conn.search(
-        "ou=accounts,o=redbrick", 2, "(&)", attrlist=["uidNumber"]
+        "ou=accounts,o=redbrick",
+        2,
+        "(objectclass=posixAccount)",
+        attrlist=["uidNumber"],
     )
     uids = [entry["uidNumber"][0] for entry in res]
     uids.sort()

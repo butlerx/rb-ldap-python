@@ -29,7 +29,7 @@ async def reset_password(
         results = await conn.search(
             "ou=accounts,o=redbrick",
             2,
-            f"((uid={username})|(gecos={username}))",
+            f"(|(uid={username})(gecos={username}))",
             attrlist=["altmail"],
         )
         if not results:

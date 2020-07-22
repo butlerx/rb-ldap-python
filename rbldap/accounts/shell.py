@@ -23,7 +23,7 @@ async def set_shell(
     results = await conn.search(
         "ou=accounts,o=redbrick",
         2,
-        f"((uid={username})|(gecos={username}))",
+        f"(|(uid={username})(gecos={username}))",
         attrlist=["loginShell"],
     )
     if not results:
