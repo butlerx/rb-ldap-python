@@ -32,7 +32,7 @@ async def disable_unpaid(
         res = await conn.search(
             "ou=accounts,o=redbrick",
             2,
-            "(&((yearspaid=0))(|(usertype=member)(usertype=associate)(usertype=staff))",
+            "(&(yearspaid=0)(|(usertype=member)(usertype=associate)(usertype=staff))",
             attrlist=["uid", "yearsPaid", "homeDirectory", "usertype"],
         )
         users = [user for user in res if user["yearsPaid"][0] == 0]

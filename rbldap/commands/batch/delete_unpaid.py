@@ -1,14 +1,14 @@
 """delete unpaid automation"""
 from asyncio import gather
 
-from bonsai import LDAPClient, LDAPEntry
+from bonsai import LDAPClient
 from mailmanclient import Client
 
-from ..accounts import del_user
+from ...accounts import del_user
 
 
 async def delete_unpaid(
-    rb_client: LDAPClient, mailman: Client, *, verify_delete: bool = False
+    rb_client: LDAPClient, mailman: Client, commit: bool, *, verify_delete: bool = False
 ) -> int:
     """
     Delete all unpaid users accounts that are outside their grace period (years paid = -1)
@@ -33,11 +33,13 @@ async def delete_unpaid(
         res = await conn.search(
             "ou=accounts,o=redbrick",
             2,
-            "(&((yearspaid=-1))(|(usertype=member)(usertype=associate)(usertype=staff))",
+            "(&(yearspaid=-1)(|(usertype=member)(usertype=associate)(usertype=staff))",
             attrlist=["uid", "yearsPaid", "homeDirectory", "usertype"],
         )
         users = [user for user in res if user["yearsPaid"][0] == -1]
-        await gather(*[del_user(user, mailman=mailman) for user in users])
+        await gather(
+            *[del_user(user, mailman=mailman, commit=commit) for user in users]
+        )
 
     print(f"{len(users)} accounts deleted")
 

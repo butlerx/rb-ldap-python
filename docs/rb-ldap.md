@@ -1,5 +1,5 @@
-usage: rb-ldap [-h] [--version] [--user USER] [--dcu-user DCU_USER] [--host HOST] [--dcu-host DCU_HOST] [--port PORT]
-               [--dcu-port DCU_PORT] [--password PASSWORD] [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
+usage: rb-ldap [-h] [--version] [--user USER] [--dcu-user DCU_USER] [--host HOST] [--dcu-host DCU_HOST] [--port PORT] [--dcu-port DCU_PORT] [--password PASSWORD]
+               [--dcu-password DCU_PASSWORD] [--smtp SMTP] [--dry-run]
                COMMAND ...
 
 Command line interface for Redbrick LDAP

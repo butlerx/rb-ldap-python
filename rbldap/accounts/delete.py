@@ -5,7 +5,7 @@ from bonsai import LDAPEntry
 from mailmanclient import Client
 
 
-async def del_user(user: LDAPEntry, mailman: Client):
+async def del_user(user: LDAPEntry, mailman: Client, *, commit: bool = True):
     """
     Delete an user, all their files and unsubscribe them from announces
 
@@ -13,6 +13,8 @@ async def del_user(user: LDAPEntry, mailman: Client):
         user: ldap entry for given user
         mailman: mailman Rest Client
     """
+    if not commit:
+        return
     await user.delete()
     uid = user["uid"][0]
     rmtree(user["homeDirectory"][0])

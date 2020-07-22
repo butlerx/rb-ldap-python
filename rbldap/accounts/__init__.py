@@ -1,5 +1,6 @@
 """acount managment"""
 from .create import create_account
+from .decrement import decrement_user
 from .delete import del_user
 from .free import check_username_free
 from .gid import gid_to_usertype, usertype_to_gid
@@ -12,6 +13,7 @@ __all__ = [
     "check_username_free",
     "create_account",
     "del_user",
+    "decrement_user",
     "find_available_uid",
     "generate_passwd",
     "gid_to_usertype",

@@ -9,9 +9,11 @@ Preform yearly update:
 ## Usage
 
 ```
-usage: rb-ldap new-year [-h]
+usage: rb-ldap new-year [-h] [--i-know-what-im-doing]
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help            show this help message and exit
+  --i-know-what-im-doing
+                        Flag to indicate to skip prompt
 
 ```
