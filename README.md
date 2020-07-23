@@ -72,3 +72,39 @@ command:
 Version 1.0.0.dev0
 Built by Redbrick <admins@redbrick.dcu.ie>, Cian Butler <butlerx@redbrick.dcu.ie>, Lucas Savva <m1cr0man@redbrick.dcu.ie>
 ```
+
+## Development
+
+Requirements:
+
+- pipenv
+
+Install dependencies:
+
+```bash
+pipenv install
+```
+
+Run Test:
+
+```bash
+pipenv run pytest
+```
+
+Build Wheel:
+
+```bash
+$ pipenv run flit build
+Found 71 files tracked in git                                                             I-flit.sdist
+Writing generated setup.py                                                                I-flit.sdist
+Built sdist: dist/rbldap-1.0.0.dev0.tar.gz                                           I-flit_core.sdist
+Copying package file(s) from /tmp/tmprb5ifr6l/rbldap-1.0.0.dev0/rbldap               I-flit_core.wheel
+Writing metadata files                                                               I-flit_core.wheel
+Writing the record of files                                                          I-flit_core.wheel
+Built wheel: dist/rbldap-1.0.0.dev0-py3-none-any.whl                                 I-flit_core.wheel
+```
+
+Run `rb-ldap` locally
+```bash
+pipenv run python -m rbldap --help
+```
