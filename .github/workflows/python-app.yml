@@ -9,12 +9,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Setup ldap
+        run: |
+          sudo apt update
+          sudo apt install -y libldap2-dev libsasl2-dev ldap-utils sasl2-bin
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: ${{ matrix.python-version }}
       - name: Install pipenv
         uses: dschep/install-pipenv-action@v1
       - name: Install dependencies
@@ -22,8 +29,30 @@ jobs:
           pipenv install
       - name: Lint with flake8
         run: |
-          pipenv run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          pipenv run flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+          pipenv run flake8 . \
+            --count \
+            --exit-zero \
+            --show-source \
+            --statistics
       - name: Test with pytest
         run: |
-          pipenv run pytest
+          pipenv run pytest tests.py \
+            --doctest-modules \
+            --junitxml=junit/test-results.xml \
+            --cov=com \
+            --cov-report=xml \
+            --cov-report=html
+            - name: Upload pytest test results
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest-results-${{ matrix.python-version }}
+          path: junit/test-results-${{ matrix.python-version }}.xml
+      - name: Build Wheel
+        run: |
+          pipenv run flit build
+      - name: Upload Wheel
+        uses: actions/upload-artifact@v2
+        with:
+          name: rbldap-wheel-${{ matrix.python-version }}
+          path: rbldap-1.0.0.dev0-py3-none-any.whl
