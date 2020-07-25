@@ -2,14 +2,16 @@
 
 from asyncio import gather
 
-from bonsai import LDAPClient
 from mailmanclient import Client
 
-from ...accounts import decrement_user, del_user, set_shell
+from ldap3 import MODIFY_INCREMENT, MODIFY_REPLACE
+
+from ...accounts import del_user, set_shell
+from ...accounts.clients import LDAPConnection
 
 
 async def new_year(
-    rb_client: LDAPClient,
+    rb_client: LDAPConnection,
     mailman: Client,
     commit: bool,
     *,
@@ -43,34 +45,56 @@ async def new_year(
     ):
         return 1
 
-    async with rb_client.connect(is_async=True) as conn:
+    async with rb_client.connect() as conn:
         all_users = await conn.search(
             "ou=accounts,o=redbrick",
-            2,
             "(|(usertype=member)(usertype=associate)(usertype=staff)",
-            attrlist=["uid", "yearsPaid", "homeDirectory", "usertype"],
+            attributes=["uid", "yearsPaid", "homeDirectory", "usertype"],
         )
-        years_0_or_more = [user for user in all_users if user["yearsPaid"][0] >= 0]
-        years_0 = [user for user in all_users if user["yearsPaid"][0] == 0]
-        years_minus_1 = [user for user in all_users if user["yearsPaid"][0] == -1]
+        years_0 = [
+            user for user in all_users if user["attributes"]["yearsPaid"][0] == 0
+        ]
+        years_minus_1 = [
+            user for user in all_users if user["attributes"]["yearsPaid"][0] == -1
+        ]
 
-        # Disable all accounts that havent paid in a year
-        await gather(
-            *[
-                set_shell(
-                    conn,
-                    user["uid"][0],
-                    shell="/usr/local/shells/expired",
-                    commit=commit,
-                )
-                for user in years_0
-            ]
-        )
-        # Delete all accounts that havent paid in 2 year
-        await gather(
-            *[del_user(user, mailman=mailman, commit=commit) for user in years_minus_1]
-        )
-        await gather(*[decrement_user(user, commit=commit) for user in years_0_or_more])
+        if commit:
+            # Disable all accounts that havent paid in a year
+            await gather(
+                *[
+                    conn.modify(
+                        user["dn"],
+                        {
+                            "loginShell": [
+                                (MODIFY_REPLACE, ["/usr/local/shells/expired",])
+                            ],
+                            "newbie": [(MODIFY_REPLACE, [False])],
+                            "yearsPaid": [(MODIFY_INCREMENT, [-1])],
+                        },
+                    )
+                    for user in years_0
+                ]
+            )
+            # Delete all accounts that havent paid in 2 year
+            await gather(
+                *[
+                    del_user(user, mailman=mailman, commit=commit)
+                    for user in years_minus_1
+                ]
+            )
+            await gather(
+                *[
+                    conn.modify(
+                        user["dn"],
+                        {
+                            "newbie": [(MODIFY_REPLACE, [False])],
+                            "yearsPaid": [(MODIFY_INCREMENT, [-1])],
+                        },
+                    )
+                    for user in all_users
+                    if user["attributes"]["yearsPaid"][0] > 0
+                ]
+            )
 
     print(f"{len(years_0)} accounts disabled")
     print(f"{len(years_minus_1)} accounts deleted")

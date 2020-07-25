@@ -2,8 +2,7 @@
 
 from typing import List
 
-from bonsai.ldapconnection import LDAPConnection
-
+from ..clients import LDAPConnection
 from ..types import DCU_ATTR, DCUUser
 
 
@@ -34,5 +33,5 @@ async def search_dcu(
     )
     if not query:
         return []
-    res = await ldap_conn.search("o=ad,o=dcu,o=ie", 2, f"(&{query})", attrlist=DCU_ATTR)
+    res = await ldap_conn.search("o=ad,o=dcu,o=ie", f"(&{query})", attributes=DCU_ATTR)
     return [DCUUser.from_ldap(user) for user in res]

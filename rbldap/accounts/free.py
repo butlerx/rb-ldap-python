@@ -1,6 +1,6 @@
 """functions for checking if a username is free"""
 
-from bonsai.ldapconnection import LDAPConnection
+from .clients import LDAPConnection
 
 
 async def check_username_free(conn: LDAPConnection, username: str) -> bool:
@@ -14,5 +14,5 @@ async def check_username_free(conn: LDAPConnection, username: str) -> bool:
     Return:
         boolean indicating if the username already exists in ldap
     """
-    res = await conn.search("ou=accounts,o=redbrick", 2, f"(uid={username})")
+    res = await conn.search("ou=accounts,o=redbrick", f"(uid={username})")
     return bool(res)

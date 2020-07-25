@@ -1,13 +1,12 @@
 """renew command"""
 
-from bonsai import LDAPClient
-
+from ..accounts.clients import LDAPConnection
 from ..mail import RBMail
 
 
 async def renew(
-    rb_client: LDAPClient,
-    dcu_client: LDAPClient,
+    rb_client: LDAPConnection,
+    dcu_client: LDAPConnection,
     smtp_client: RBMail,
     commit: bool,
     username: str,

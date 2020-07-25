@@ -1,16 +1,16 @@
 """user creation"""
 from os import chown, makedirs, path, symlink
 
-from bonsai.ldapconnection import LDAPConnection
 from mailmanclient import Client
 
 from ..mail import RBMail
+from .clients import LDAPConnection
 from .types import RBUser
 
 
 async def create_account(
     conn: LDAPConnection, smtp: RBMail, mailman: Client, new_user: RBUser
-):
+) -> RBUser:
     """
     Add user to ldap
 
@@ -25,7 +25,7 @@ async def create_account(
         users details
     """
 
-    await conn.add(new_user.to_ldap())
+    await conn.add(new_user.dn, new_user.object_class, new_user.to_ldap())
     if not path.exists(new_user.home_directory):
         makedirs(new_user.home_directory, mode=0o711, exist_ok=True)
         with open(f"{new_user.home_directory}/.forward", "w+") as f:
@@ -45,3 +45,4 @@ async def create_account(
     mailing_list.subscribe(f"{new_user.uid}@redbrick.dcu.ie")
     async with smtp:
         await smtp.send_account_details(new_user)
+    return new_user

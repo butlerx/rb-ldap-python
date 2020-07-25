@@ -2,9 +2,8 @@
 from os import path
 from typing import Optional
 
-from bonsai import LDAPClient
-
 from ..accounts import gid_to_usertype
+from ..accounts.clients import LDAPConnection
 
 
 def user2nix(uid: str, home: str, gid: str) -> str:
@@ -36,9 +35,9 @@ def ldap2nix(user: dict, webtree: str) -> Optional[str]:
     Returns:
         Returns String containing a nix object for inserting in a nix array
     """
-    uid = user["uid"][0]
-    home = user["homeDirectory"][0]
-    gid = gid_to_usertype(user["gidNumber"][0])
+    uid = user["attributes"]["uid"]
+    home = user["attributes"]["homeDirectory"]
+    gid = gid_to_usertype(user["attributes"]["gidNumber"])
 
     if uid and home and gid:
         if path.exists(f"{webtree}/{uid[0]}/{uid}") or "/var/lib" in home:
@@ -47,7 +46,9 @@ def ldap2nix(user: dict, webtree: str) -> Optional[str]:
     return None
 
 
-async def generate(rb_client: LDAPClient, output: str, *, webtree: str = "/webtree"):
+async def generate(
+    rb_client: LDAPConnection, output: str, *, webtree: str = "/webtree"
+) -> int:
     """
     Generate nix config for user vhosts based off ldap
 
@@ -56,16 +57,17 @@ async def generate(rb_client: LDAPClient, output: str, *, webtree: str = "/webtr
         output: path to write generate config too
         webtree: Root folder of webtree
     """
-    async with rb_client.connect(is_async=True) as conn:
+    async with rb_client.connect() as conn:
         res = await conn.search(
             "ou=accounts,o=redbrick",
-            2,
             "(objectclass=posixAccount)",
-            attrlist=["uid", "homeDirectory", "gidNumber"],
+            attributes=["uid", "homeDirectory", "gidNumber"],
         )
-    nix = [
-        conf for conf in [ldap2nix(user, webtree) for user in res] if conf is not None
-    ]
+        nix = [
+            conf
+            for conf in [ldap2nix(user, webtree) for user in res]
+            if conf is not None
+        ]
 
     print(f"Generated nix config for {str(len(nix))} users")
     nix_conf = "\n".join(nix)

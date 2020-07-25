@@ -39,16 +39,17 @@ year: {self.year}"""
     def from_ldap(cls, user: dict) -> "DCUUser":
         """convert ldap response in to an DCUUser"""
         match = re.search(
-            "(?P<course>[A-Z]+)(?P<year>[0-9]+)", user["physicalDeliveryOfficeName"][0]
+            "(?P<course>[A-Z]+)(?P<year>[0-9]+)",
+            user["attributes"]["physicalDeliveryOfficeName"][0],
         )
         return cls(
             role=user["dn"].rdns[1][1],
-            display_name=user["displayName"][0],
-            mail=user["mail"][0],
-            id=user["employeeNumber"][0],
+            display_name=user["attributes"]["displayName"][0],
+            mail=user["attributes"]["mail"][0],
+            id=user["attributes"]["employeeNumber"][0],
             course=match.groupdict("course"),
             year=match.groupdict("year"),
-            birthday=user["birthday"][0],
+            birthday=user["attributes"]["birthday"][0],
         )
 
     @property

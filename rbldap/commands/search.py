@@ -2,15 +2,14 @@
 
 from typing import List, Union
 
-from bonsai import LDAPClient
-
 from ..accounts import search_dcu, search_rb
+from ..accounts.clients import LDAPConnection
 from ..accounts.types import DCUUser, RBUser
 
 
 async def search(
-    rb_client: LDAPClient,
-    dcu_client: LDAPClient,
+    rb_client: LDAPConnection,
+    dcu_client: LDAPConnection,
     *,
     dcu: bool = False,
     id: str = None,
@@ -18,7 +17,7 @@ async def search(
     altmail: str = None,
     fullname: List[str] = [],
     noob: bool = False,
-):
+) -> int:
     """
     Search ldap for user
 
@@ -34,12 +33,12 @@ async def search(
     """
     results: List[Union[RBUser, DCUUser]] = []
     if dcu:
-        async with dcu_client.connect(is_async=True) as conn:
+        async with dcu_client.connect() as conn:
             results = await search_dcu(
                 conn, dcu_id=id, uid=uid, fullname=" ".join(fullname)
             )
     else:
-        async with rb_client.connect(is_async=True) as conn:
+        async with rb_client.connect() as conn:
             results = await search_rb(
                 conn,
                 uid=uid,
@@ -49,3 +48,4 @@ async def search(
                 noob=noob,
             )
     print("No User found" if not results else results)
+    return int(bool(results))

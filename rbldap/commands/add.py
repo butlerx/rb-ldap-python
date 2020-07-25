@@ -3,7 +3,6 @@
 from os import getuid
 from pwd import getpwuid
 
-from bonsai import LDAPClient
 from mailmanclient import Client
 
 from ..accounts import (
@@ -12,14 +11,15 @@ from ..accounts import (
     find_available_uid,
     search_dcu,
 )
+from ..accounts.clients import LDAPConnection
 from ..accounts.errors import DuplicateUser, UnknownID
 from ..accounts.types import RBUser
 from ..mail import RBMail
 
 
 async def add(
-    rb_client: LDAPClient,
-    dcu_client: LDAPClient,
+    rb_client: LDAPConnection,
+    dcu_client: LDAPConnection,
     smtp_client: RBMail,
     mailman: Client,
     commit: bool,
@@ -46,16 +46,16 @@ async def add(
         DuplicateUser: Thrown if the supplied username already exists
         UnkownID: Thrown is the supplied student id does not return an users
     """
-    async with rb_client.connect(is_async=True) as conn:
+    async with rb_client.connect() as conn:
         if not await check_username_free(conn, username):
             raise DuplicateUser()
-        async with dcu_client.connect(is_aysnc=True) as dcu_conn:
-            students = await search_dcu(dcu_conn, dcu_id=id)
-            if not students:
+        async with dcu_client.connect() as dcu_conn:
+            student = await search_dcu(dcu_conn, dcu_id=id)
+            if not student:
                 raise UnknownID()
         uid = await find_available_uid(conn)
         new_user = RBUser.from_dcu(
-            students[0],
+            student[0],
             username,
             uid=uid,
             created_by=getpwuid(getuid())[

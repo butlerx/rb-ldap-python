@@ -3,7 +3,7 @@
 from mailmanclient import Client
 
 from . import __author__, __doc__, __version__
-from .accounts.clients import ldap_client
+from .accounts.clients import LDAPConnection
 from .cli_parser import Program
 from .commands import (
     add,
@@ -56,8 +56,8 @@ def build_globals(
         Dictionary of objects that can be accessed from commads
     """
     return dict(
-        rb_client=ldap_client(host, port, user, password),
-        dcu_client=ldap_client(dcu_host, dcu_port, dcu_user, dcu_password),
+        rb_client=LDAPConnection(host, port, user, password),
+        dcu_client=LDAPConnection(dcu_host, dcu_port, dcu_user, dcu_password),
         smtp_client=RBMail(hostname=smtp, port=587, use_tls=False),
         mailman=Client("http://localhost:9001/3.1", "restadmin", "restpass"),
         commit=(not dry_run),

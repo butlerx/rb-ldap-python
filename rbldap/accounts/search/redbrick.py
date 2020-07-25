@@ -2,8 +2,7 @@
 
 from typing import List
 
-from bonsai.ldapconnection import LDAPConnection
-
+from ..clients import LDAPConnection
 from ..types import RB_ATTR, RBUser
 
 
@@ -44,6 +43,6 @@ async def search_rb(
     if not query:
         return []
     res = await ldap_conn.search(
-        "ou=accounts,o=redbrick", 2, f"(&{query})", attrlist=RB_ATTR
+        "ou=accounts,o=redbrick", f"(&{query})", attributes=RB_ATTR
     )
     return [RBUser.from_ldap(user) for user in res]

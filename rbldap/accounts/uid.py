@@ -1,6 +1,6 @@
 """uid functions"""
 
-from bonsai.ldapconnection import LDAPConnection
+from .clients import LDAPConnection
 
 
 async def find_available_uid(ldap_conn: LDAPConnection) -> int:
@@ -15,10 +15,9 @@ async def find_available_uid(ldap_conn: LDAPConnection) -> int:
     """
     res = await ldap_conn.search(
         "ou=accounts,o=redbrick",
-        2,
         "(objectclass=posixAccount)",
-        attrlist=["uidNumber"],
+        attributes=["uidNumber"],
     )
-    uids = [entry["uidNumber"][0] for entry in res]
+    uids = [entry["attributes"]["uidNumber"][0] for entry in res]
     uids.sort()
-    return uids[-1] + 1
+    return int(uids[-1]) + 1

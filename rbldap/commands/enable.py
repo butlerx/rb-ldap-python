@@ -1,11 +1,11 @@
 """enable command"""
 
-from bonsai import LDAPClient
+from ldap3 import MODIFY_REPLACE
 
-from ..accounts import set_shell
+from ..accounts.clients import LDAPConnection
 
 
-async def enable(rb_client: LDAPClient, commit: bool, username: str) -> int:
+async def enable(rb_client: LDAPConnection, commit: bool, username: str) -> int:
     """
     Renable a Users LDAP Account
 
@@ -20,7 +20,11 @@ async def enable(rb_client: LDAPClient, commit: bool, username: str) -> int:
     Raises:
         UserNotFound: No user was found matching the username
     """
-    async with rb_client.connect(is_async=True) as conn:
-        await set_shell(conn, username, shell="/usr/local/shells/shell", commit=commit)
+    async with rb_client.connect() as conn:
+        if commit:
+            await conn.modify(
+                f"uid={username},ou=accounts,o=redbrick",
+                {"loginShell": [(MODIFY_REPLACE, ["/usr/local/shells/shell"])]},
+            )
     print(f"{username} Account re-enabled")
     return 0

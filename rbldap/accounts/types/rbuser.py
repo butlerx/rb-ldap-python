@@ -65,6 +65,16 @@ class RBUser:
     host: List[str]  # List of hosts.
     shadow_last_change: int
 
+    @property
+    def dn(self) -> str:
+        """
+        get users dn
+
+        Returns:
+            formatted string of user dn in ldap
+        """
+        return f"uid={self.uid},ou=accounts,o=redbrick"
+
     def __str__(self) -> str:
         date_format = "%Y-%m-%d %H:%M:%S"
         return f"""User Information
@@ -106,29 +116,29 @@ shadowLastChange: {self.shadow_last_change}"""
         """
         date_format = "%Y-%m-%dT%H:%M:%S%z"
         return cls(
-            uid=user["uid"][0],
-            usertype=user["usertype"][0],
-            object_class=user["objectClass"],
-            newbie=user["newbie"][0],
-            cn=user["cn"][0],
-            altmail=user["altmail"][0],
-            id=user["id"][0],
-            course=user["course"][0],
-            year=user["year"][0],
-            years_paid=user["yearsPaid"][0],
-            updated_by=user["updatedBy"][0],
-            updated=datetime.strptime(user["updated"][0], date_format),
-            created_by=user["createdBy"][0],
-            created=datetime.strptime(user["created"][0], date_format),
-            birthday=datetime.strptime(user["birthday"][0], date_format),
-            uid_number=user["uidNumber"][0],
-            gid_number=user["gidNumber"][0],
-            gecos=user["gecos"],
-            login_shell=user["loginShell"][0],
-            home_directory=user["homeDirectory"][0],
-            user_password=user["userPassword"][0],
-            host=user["host"],
-            shadow_last_change=user["shadowLastChange"][0],
+            uid=user["attributes"]["uid"][0],
+            usertype=user["attributes"]["usertype"][0],
+            object_class=user["attributes"]["objectClass"],
+            newbie=user["attributes"]["newbie"][0],
+            cn=user["attributes"]["cn"][0],
+            altmail=user["attributes"]["altmail"][0],
+            id=user["attributes"]["id"][0],
+            course=user["attributes"]["course"][0],
+            year=user["attributes"]["year"][0],
+            years_paid=user["attributes"]["yearsPaid"][0],
+            updated_by=user["attributes"]["updatedBy"][0],
+            updated=datetime.strptime(user["attributes"]["updated"][0], date_format),
+            created_by=user["attributes"]["createdBy"][0],
+            created=datetime.strptime(user["attributes"]["created"][0], date_format),
+            birthday=datetime.strptime(user["attributes"]["birthday"][0], date_format),
+            uid_number=user["attributes"]["uidNumber"][0],
+            gid_number=user["attributes"]["gidNumber"][0],
+            gecos=user["attributes"]["gecos"],
+            login_shell=user["attributes"]["loginShell"][0],
+            home_directory=user["attributes"]["homeDirectory"][0],
+            user_password=user["attributes"]["userPassword"][0],
+            host=user["attributes"]["host"],
+            shadow_last_change=user["attributes"]["shadowLastChange"][0],
         )
 
     @classmethod

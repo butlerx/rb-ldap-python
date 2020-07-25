@@ -11,13 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.8]
     steps:
       - uses: actions/checkout@v2
-      - name: Setup ldap
-        run: |
-          sudo apt update
-          sudo apt install -y libldap2-dev libsasl2-dev ldap-utils sasl2-bin
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
