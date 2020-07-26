@@ -6,7 +6,7 @@ from mailmanclient import Client
 
 from ldap3 import MODIFY_INCREMENT, MODIFY_REPLACE
 
-from ...accounts import del_user, set_shell
+from ...accounts import del_user
 from ...accounts.clients import LDAPConnection
 
 
@@ -66,7 +66,7 @@ async def new_year(
                         user["dn"],
                         {
                             "loginShell": [
-                                (MODIFY_REPLACE, ["/usr/local/shells/expired",])
+                                (MODIFY_REPLACE, ["/usr/local/shells/expired"])
                             ],
                             "newbie": [(MODIFY_REPLACE, [False])],
                             "yearsPaid": [(MODIFY_INCREMENT, [-1])],

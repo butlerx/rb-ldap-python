@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from functools import partial
 from typing import Any, AsyncGenerator, Dict, List, Tuple, Union
 
-from ldap3 import ALL, ASYNC, MODIFY_REPLACE, SIMPLE, Connection, Server
+from ldap3 import ALL, ASYNC, SIMPLE, Connection, Server
 
 __all__ = ["LDAPConnection", "Result"]
 

@@ -4,7 +4,6 @@ from ldap3 import MODIFY_REPLACE
 
 from ...accounts import generate_passwd
 from ...accounts.clients import LDAPConnection
-from ...accounts.errors import UserNotFound
 from ...mail import RBMail
 
 

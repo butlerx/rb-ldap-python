@@ -32,10 +32,13 @@ def build_globals(
     dcu_host: str = "ad.dcu.ie",
     port: int = 389,
     dcu_port: int = 389,
-    password: str = "/etc/ldap.secret",
-    dcu_password: str = "/etc/dcu_ldap.secrt",
+    password: str = "/var/secrets/ldap.secret",
+    dcu_password: str = "/var/secrets/dcu_ldap.secret",
     smtp: str = "smtp.redbrick.dcu.ie",
     dry_run: bool = False,
+    mailman_host: str = "https://lists.redbrick.dcu.ie/3.1",
+    mailman_user: str = "admin",
+    mailman_password: str = "/var/secrets/mailman.secret",
 ) -> dict:
     """
     Setup Shared clients
@@ -51,15 +54,21 @@ def build_globals(
         dcu_password: path to file containing the password for the DCU AD server"
         smtp: smtp server to send email with
         dry_run: output to console rather then file
+        mailman_host: url to mailman server
+        mailman_user: user account to use with mailman
+        mailman_password: secret file to use for mailman password
 
     Returns:
         Dictionary of objects that can be accessed from commads
     """
+    with open(mailman_password, "r") as file:
+        _mailman_password = file.read().strip()
+
     return dict(
         rb_client=LDAPConnection(host, port, user, password),
         dcu_client=LDAPConnection(dcu_host, dcu_port, dcu_user, dcu_password),
         smtp_client=RBMail(hostname=smtp, port=587, use_tls=False),
-        mailman=Client("http://localhost:9001/3.1", "restadmin", "restpass"),
+        mailman=Client(mailman_host, mailman_user, _mailman_password),
         commit=(not dry_run),
     )
 
