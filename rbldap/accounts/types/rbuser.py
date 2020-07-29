@@ -73,34 +73,6 @@ class RBUser:
         """
         return f"uid={self.uid},ou=accounts,o=redbrick"
 
-    def __str__(self) -> str:
-        date_format = "%Y-%m-%d %H:%M:%S"
-        return f"""User Information
-================
-uid: {self.uid}
-usertype: {self.usertype}
-objectClass: {", ".join(self.object_class)}
-newbie: {self.newbie}
-cn: {self.cn}
-altmail: {self.altmail}
-id: {self.id}
-course: {self.course}
-year: {self.year}
-yearsPaid: {self.years_paid}
-updatedBy: {self.updated_by}
-updated: {self.updated.strftime(date_format)}
-createdBy: {self.created_by}
-created: {self.created.strftime(date_format)}
-birthday: {self.birthday.strftime(date_format)}
-uidNumber: {self.uid_number}
-gidNumber: {self.gid_number}
-gecos: {", ".join(self.gecos)}
-loginShell: {self.login_shell}
-homeDirectory: {self.home_directory}
-userPassword: {self.user_password}
-host: {", ".join(self.host)}
-shadowLastChange: {self.shadow_last_change}"""
-
     @classmethod
     def from_ldap(cls, user: dict) -> "RBUser":
         """
@@ -189,7 +161,38 @@ shadowLastChange: {self.shadow_last_change}"""
             shadow_last_change=0,
         )
 
-    def __repr__(self) -> dict:
+    def __str__(self) -> str:
+        date_format = "%Y-%m-%d %H:%M:%S"
+        return f"""User Information
+================
+uid: {self.uid}
+usertype: {self.usertype}
+objectClass: {", ".join(self.object_class)}
+newbie: {self.newbie}
+cn: {self.cn}
+altmail: {self.altmail}
+id: {self.id}
+course: {self.course}
+year: {self.year}
+yearsPaid: {self.years_paid}
+updatedBy: {self.updated_by}
+updated: {self.updated.strftime(date_format)}
+createdBy: {self.created_by}
+created: {self.created.strftime(date_format)}
+birthday: {self.birthday.strftime(date_format)}
+uidNumber: {self.uid_number}
+gidNumber: {self.gid_number}
+gecos: {", ".join(self.gecos)}
+loginShell: {self.login_shell}
+homeDirectory: {self.home_directory}
+userPassword: {self.user_password}
+host: {", ".join(self.host)}
+shadowLastChange: {self.shadow_last_change}"""
+
+    def __repr__(self) -> str:
+        return str(self.to_ldap())
+
+    def to_ldap(self) -> dict:
         """
         format class for writing to ldap
 

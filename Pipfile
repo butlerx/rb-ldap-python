@@ -29,5 +29,5 @@ allow_prereleases = true
 [scripts]
 lint = "flake8 rbldap tests --count --exit-zero --show-source --statistics"
 format = "black rbldap tests"
-tests = "pipenv run pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml  --cov-report=html"
+tests = "pipenv run pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml  --cov-report=html"
 build = "flit build"
