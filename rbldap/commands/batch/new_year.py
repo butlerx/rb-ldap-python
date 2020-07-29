@@ -77,10 +77,7 @@ async def new_year(
             )
             # Delete all accounts that havent paid in 2 year
             await gather(
-                *[
-                    del_user(user, mailman=mailman, commit=commit)
-                    for user in years_minus_1
-                ]
+                *[del_user(conn, user, mailman=mailman) for user in years_minus_1]
             )
             await gather(
                 *[

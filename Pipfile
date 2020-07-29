@@ -33,7 +33,7 @@ lint = """flake8 rbldap tests \
         --show-source \
         --statistics"""
 format = "black rbldap tests"
-tests = """pytest -s \
+tests = """pytest -ra \
          --doctest-modules \
          --junitxml=tests/results/test-results.xml \
          --cov=rbldap \
