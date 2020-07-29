@@ -25,20 +25,10 @@ jobs:
           pipenv install
       - name: Lint with flake8
         run: |
-          pipenv run flake8 . \
-            --count \
-            --exit-zero \
-            --show-source \
-            --statistics
+          pipenv run lint
       - name: Test with pytest
         run: |
-          pipenv run pytest tests.py \
-            --doctest-modules \
-            --junitxml=junit/test-results.xml \
-            --cov=com \
-            --cov-report=xml \
-            --cov-report=html
-            - name: Upload pytest test results
+          pipenv run tests
       - name: Upload pytest test results
         uses: actions/upload-artifact@v2
         with:
@@ -46,7 +36,7 @@ jobs:
           path: junit/test-results-${{ matrix.python-version }}.xml
       - name: Build Wheel
         run: |
-          pipenv run flit build
+          pipenv run build
       - name: Upload Wheel
         uses: actions/upload-artifact@v2
         with:

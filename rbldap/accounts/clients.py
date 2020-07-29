@@ -25,6 +25,8 @@ class LDAPConnection:
         port: ldap server port number
         user: user dn to bind to ldap with
         password_file: location of file containing password on disk
+        client_strategy: client_strategy to connect to ldap with. ASYNC or MOCK_ASYNC excepted
+        server: A LDAP server to be used, eg mock server
     """
 
     def __init__(
@@ -33,9 +35,14 @@ class LDAPConnection:
         port: int,
         user: str,
         password_file: str,
+        *,
+        client_strategy: str = ASYNC,
+        server: Server = None,
         loop: AbstractEventLoop = None,
     ):
-        self.server = Server(host=host, port=port, use_ssl=False, get_info=ALL)
+        self.server = server or Server(
+            host=host, port=port, use_ssl=False, get_info=ALL
+        )
         self.loop = loop or get_event_loop()
         with open(password_file, "r") as file:
             password = file.read().strip()
@@ -47,14 +54,14 @@ class LDAPConnection:
             auto_bind="NONE",
             version=3,
             authentication=SIMPLE,
-            client_strategy=ASYNC,
+            client_strategy=client_strategy,
             auto_referrals=True,
             check_names=True,
             read_only=False,
             lazy=False,
         )
 
-    async def wait_for(self, msg_id: str):
+    async def wait_for(self, msg_id: str) -> None:
         await self.loop.run_in_executor(
             None, partial(self.connection.get_respone, msg_id)
         )

@@ -18,9 +18,16 @@ flit = "*"
 isort = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-asyncio = "*"
 
 [requires]
 python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
+
+[scripts]
+lint = "flake8 rbldap tests --count --exit-zero --show-source --statistics"
+format = "black rbldap tests"
+tests = "pipenv run pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml  --cov-report=html"
+build = "flit build"
