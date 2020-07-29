@@ -9,36 +9,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.8]
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Install dependecies
+        uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install pipenv
-        uses: dschep/install-pipenv-action@v1
-      - name: Install dependencies
-        run: |
-          pipenv install
+          command: install -d
       - name: Lint with flake8
-        run: |
-          pipenv run lint
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run lint
       - name: Test with pytest
-        run: |
-          pipenv run tests
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run tests
       - name: Upload pytest test results
         uses: actions/upload-artifact@v2
         with:
-          name: pytest-results-${{ matrix.python-version }}
-          path: junit/test-results-${{ matrix.python-version }}.xml
+          name: pytest-results
+          path: junit/test-results.xml
       - name: Build Wheel
-        run: |
-          pipenv run build
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run build
       - name: Upload Wheel
         uses: actions/upload-artifact@v2
         with:
-          name: rbldap-wheel-${{ matrix.python-version }}
+          name: rbldap-wheel
           path: rbldap-1.0.0.dev0-py3-none-any.whl
