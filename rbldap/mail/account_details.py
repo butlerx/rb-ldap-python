@@ -4,43 +4,59 @@ from email.mime.text import MIMEText
 
 from markdown import markdown
 
-from ..accounts.types import RBUser
 
-
-def account_details(user: RBUser) -> MIMEMultipart:
+def account_details(
+    email: str,
+    uid: str,
+    password: str,
+    usertype: str,
+    name: str,
+    id: int,
+    course: str,
+    year: int,
+    newbie: bool = False,
+) -> MIMEMultipart:
     """
     Format user details for email
 
     Args:
-        user: the user to email and the details to email them
+        email: address to send details too
+        uid: username of the user
+        password: users password
+        usertype: users usertype
+        name: full name of user
+        id: student id of user
+        course: students course
+        year: studets year
+        newbie: if they are a new user
 
     Returns:
         Formatted Message containg html and plaintext
     """
     message = MIMEMultipart("alternative")
     message["From"] = "admin-request@redbrick.dcu.ie"
-    message["To"] = user.altmail
+    message["To"] = email
     message["Subject"] = "Welcome to Redbrick! - Your Account Details"
 
     welcome_msg = (
         "Welcome to Redbrick, the DCU Networking Society! Thank you for joining."
-        if user.newbie
+        if newbie
         else "Welcome back to Redbrick, the DCU Networking Society! Thank you for renewing."
     )
     markdown_msg = f"""{welcome_msg}
 Your Redbrick Account details are:
 
-- username: {user.uid}
-- password: {user.user_password}
-- account type: {user.usertype}
-- name: {user.cn}
-- id number: {user.id}
-- course: {user.course}
-- year: {user.year}
+- username: {uid}
+- password: {password}
+- account type: {usertype}
+- name: {name}
+- id number: {id}
+- course: {course}
+- year: {year}
 
 ---
-Your Redbrick webpage: [{user.uid}.redbrick.dcu.ie](https://{user.uid}.redbrick.dcu.ie)
-Your Redbrick email: {user.uid}@redbrick.dcu.ie
+Your Redbrick webpage: [{uid}.redbrick.dcu.ie](https://{uid}.redbrick.dcu.ie)
+Your Redbrick email: {uid}@redbrick.dcu.ie
 You can find out more about our services [here](https://www.redbrick.dcu.ie/about/welcome)
 
 We recommend that you change your password as soon as you login.

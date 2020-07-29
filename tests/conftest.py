@@ -1,3 +1,4 @@
+"""mocked interfaces"""
 from contextlib import asynccontextmanager
 from email.mime.multipart import MIMEMultipart
 from typing import AsyncGenerator, List
@@ -83,7 +84,7 @@ def smtp() -> rbldap.mail.RBMail:
         SMTP client that mocks sending email
     """
     # Sure i might be a terrible person but lets see you mock an smtp server
-    rbldap.mail.client.SMTP = DummySMTP
+    rbldap.mail.SMTP = DummySMTP
     return rbldap.mail.RBMail()
 
 
