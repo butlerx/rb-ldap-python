@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: pytest-results
-          path: junit/test-results.xml
+          path: tests/results/
       - name: Build Wheel
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
@@ -36,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: rbldap-wheel
-          path: rbldap-1.0.0.dev0-py3-none-any.whl
+          path: dist/rbldap-1.0.0.dev0-py3-none-any.whl

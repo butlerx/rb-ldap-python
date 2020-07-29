@@ -1,6 +1,6 @@
 import pytest
 
-from ldap3 import MOCK_ASYNC, Connection, Server
+from ldap3 import MOCK_ASYNC, Server
 from rbldap.accounts.clients import LDAPConnection
 
 

@@ -1,7 +1,3 @@
-
-# Created by https://www.toptal.com/developers/gitignore/api/python,vim,vscode
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,vim,vscode
-
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -43,6 +39,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
+tests/results
 htmlcov/
 .tox/
 .nox/
@@ -156,7 +153,3 @@ Sessionx.vim
 tags
 # Persistent undo
 [._]*.un~
-
-#!! ERROR: vscode is undefined. Use list command to see defined gitignore types !!#
-
-# End of https://www.toptal.com/developers/gitignore/api/python,vim,vscode

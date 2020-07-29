@@ -4,7 +4,7 @@ from asyncio import gather
 
 from ldap3 import MODIFY_REPLACE
 
-from ..accounts.clients import LDAPConnection
+from ...accounts.clients import LDAPConnection
 
 
 async def disable_unpaid(

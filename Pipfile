@@ -27,7 +27,20 @@ python_version = "3.8"
 allow_prereleases = true
 
 [scripts]
-lint = "flake8 rbldap tests --count --exit-zero --show-source --statistics"
+lint = """flake8 rbldap tests \
+        --count \
+        --exit-zero \
+        --show-source \
+        --statistics"""
 format = "black rbldap tests"
-tests = "pipenv run pytest tests --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml  --cov-report=html"
+tests = """pytest -s \
+         --doctest-modules \
+         --junitxml=tests/results/test-results.xml \
+         --cov=rbldap \
+         --no-cov-on-fail \
+         --cov-fail-under=80 \
+         --cov-report=xml:tests/results/coverage.xml \
+         --cov-report=html:tests/results/coverage \
+         --cov-report=term \
+         ."""
 build = "flit build"
