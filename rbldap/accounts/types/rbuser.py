@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from bonsai import LDAPEntry
-
 from ..gid import usertype_to_gid
 from ..passwd import generate_passwd
 from .dcu import DCUUser
@@ -109,7 +107,7 @@ shadowLastChange: {self.shadow_last_change}"""
         convert ldap response in to an RBUser
 
         Args:
-            user: dictionary returned from bonsai with user info
+            user: dictionary returned from ldap with user info
 
         Return:
             User with details from ldap dict
@@ -191,38 +189,38 @@ shadowLastChange: {self.shadow_last_change}"""
             shadow_last_change=0,
         )
 
-    def to_ldap(self) -> LDAPEntry:
+    def __repr__(self) -> dict:
         """
         format class for writing to ldap
 
         Return:
-            LDAPEntry for writing to ldap
+            dictionary of attributes
         """
         date_format = "%Y-%m-%dT%H:%M:%S%z"
-        user = LDAPEntry(f"uid={self.uid},ou=accounts,o=redbrick")
-        user["uid"] = self.uid
-        user["usertype"] = self.usertype
-        user["objectClass"] = self.object_class
-        user["newbie"] = self.newbie
-        user["cn"] = self.cn
-        user["altmail"] = self.altmail
-        user["id"] = self.id
-        user["course"] = self.course
-        user["year"] = self.year
-        user["yearsPaid"] = self.years_paid
-        user["updatedBy"] = self.updated_by
-        user["updated"] = self.updated.strftime(date_format)
-        user["createdBy"] = self.created_by
-        user["created"] = self.created.strftime(date_format)
-        user["birthday"] = self.birthday.strftime(date_format)
-        user["uidNumber"] = self.uid_number
-        user["gidNumber"] = self.gid_number
-        user["gecos"] = self.gecos
-        user["loginShell"] = self.login_shell
-        user["homeDirectory"] = self.home_directory
-        user["userPassword"] = self.user_password
-        user["host"] = self.host
-        user["shadowLastChange"] = (
-            [self.shadow_last_change] if self.shadow_last_change != 0 else []
+        return dict(
+            uid=self.uid,
+            usertype=self.usertype,
+            objectClass=self.object_class,
+            newbie=self.newbie,
+            cn=self.cn,
+            altmail=self.altmail,
+            id=self.id,
+            course=self.course,
+            year=self.year,
+            yearsPaid=self.years_paid,
+            updatedBy=self.updated_by,
+            updated=self.updated.strftime(date_format),
+            createdBy=self.created_by,
+            created=self.created.strftime(date_format),
+            birthday=self.birthday.strftime(date_format),
+            uidNumber=self.uid_number,
+            gidNumber=self.gid_number,
+            gecos=self.gecos,
+            loginShell=self.login_shell,
+            homeDirectory=self.home_directory,
+            userPassword=self.user_password,
+            host=self.host,
+            shadowLastChange=(
+                [self.shadow_last_change] if self.shadow_last_change != 0 else []
+            ),
         )
-        return user

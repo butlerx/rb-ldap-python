@@ -25,7 +25,7 @@ async def create_account(
         users details
     """
 
-    await conn.add(new_user.dn, new_user.object_class, new_user.to_ldap())
+    await conn.add(new_user.dn, attributes=new_user.__repr__())
     if not path.exists(new_user.home_directory):
         makedirs(new_user.home_directory, mode=0o711, exist_ok=True)
         with open(f"{new_user.home_directory}/.forward", "w+") as f:

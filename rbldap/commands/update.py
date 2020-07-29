@@ -1,13 +1,12 @@
 """update command"""
 
-from bonsai import LDAPClient
-
+from ..accounts.clients import LDAPConnection
 from ..mail import RBMail
 
 
 async def update(
-    rb_client: LDAPClient,
-    dcu_client: LDAPClient,
+    rb_client: LDAPConnection,
+    dcu_client: LDAPConnection,
     smtp_client: RBMail,
     commit: bool,
     username: str,
