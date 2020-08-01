@@ -2,9 +2,8 @@
 
 from asyncio import gather
 
-from mailmanclient import Client
-
 from ldap3 import MODIFY_INCREMENT, MODIFY_REPLACE
+from mailmanclient import Client
 
 from ...accounts import del_user
 from ...accounts.clients import LDAPConnection

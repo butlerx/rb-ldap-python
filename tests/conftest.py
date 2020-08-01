@@ -4,10 +4,10 @@ from email.mime.multipart import MIMEMultipart
 from typing import AsyncGenerator, List
 
 import pytest
+from ldap3 import MOCK_ASYNC, Server
 from mailmanclient import Client
 
 import rbldap.mail
-from ldap3 import MOCK_ASYNC, Server
 from rbldap.accounts.clients import LDAPConnection
 
 

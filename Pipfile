@@ -32,7 +32,10 @@ lint = """flake8 rbldap tests \
         --exit-zero \
         --show-source \
         --statistics"""
-format = "black rbldap tests"
+format = """bash  -c "
+        isort . --profile black &&\
+        black ."
+        """
 tests = """pytest -ra \
          --doctest-modules \
          --junitxml=tests/results/test-results.xml \
