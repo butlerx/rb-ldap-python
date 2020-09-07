@@ -221,11 +221,11 @@
         },
         "flit": {
             "hashes": [
-                "sha256:017012b809ec489918afd68af7a70bd7c8c770c87b60159d875c126866e97a4b",
-                "sha256:25d184c59cb6f2a83bc3f3651f01007aed12db379b4dc59a4e5765b7aff4730f"
+                "sha256:ae8de64b358626e6c82de663aab8bda7b7c38bcac1e79d683dae337e7c183417",
+                "sha256:b4fe0f84a1ffbf125d003e253ec98c0b6e3e31290b31fba3ad22d28588c20893"
             ],
             "index": "pypi",
-            "version": "==2.3.0"
+            "version": "==3.0.0"
         },
         "flit-core": {
             "hashes": [
