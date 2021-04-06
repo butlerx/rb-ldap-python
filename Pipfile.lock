@@ -69,11 +69,11 @@
         },
         "markdown": {
             "hashes": [
-                "sha256:4f4172a4e989b97f96860fa434b89895069c576e2b537c4b4eed265266a7affc",
-                "sha256:fbb1ba54ca41e8991dc5a561d9c6f752f5e4546f8750e56413ea50f2385761d3"
+                "sha256:31b5b491868dcc87d6c24b7e3d19a0d730d59d3e46f4eea6430a321bed387a49",
+                "sha256:96c3ba1261de2f7547b46a00ea8463832c921d3f9d6aba3f255a6f71386db20c"
             ],
             "index": "pypi",
-            "version": "==3.3"
+            "version": "==3.3.4"
         },
         "mypy-extensions": {
             "hashes": [
