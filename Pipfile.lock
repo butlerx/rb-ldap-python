@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2a3f752a7b1bce3a616dd7263af256fa9b1a702b3a8dacd7add596048c7cd56e"
+            "sha256": "bbdca60226450ef55c8e65fbe65141d47ae4ed7b5cc6cb4a89ee5204a02f714b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -62,10 +62,10 @@
         },
         "mailmanclient": {
             "hashes": [
-                "sha256:8fc44666b0404fa6ab4b9755f8ee37c4d4001aca1d88a515a2d8ac06f7fd4f5e"
+                "sha256:4082ac0c66d7f7bee15751fe2564098b971177c0013e66d0c8ceee1ebdcb5592"
             ],
             "index": "pypi",
-            "version": "==3.3.1"
+            "version": "==3.3.2"
         },
         "markdown": {
             "hashes": [
