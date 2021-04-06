@@ -7,7 +7,7 @@ name = "pypi"
 aiosmtplib = '~= 1.1.4'
 docstring-parser = "~=0.7.3"
 ldap3 = "~=2.8"
-mailmanclient = '~=3.3.1'
+mailmanclient = '~=3.3.2'
 markdown = '~=3.3'
 typing_inspect = '~=0.6.0'
 
