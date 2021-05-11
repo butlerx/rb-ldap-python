@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiosmtplib = '~= 1.1.5'
+aiosmtplib = '~= 1.1.6'
 docstring-parser = "~=0.7.3"
 ldap3 = "~=2.9"
 mailmanclient = '~=3.3.2'
