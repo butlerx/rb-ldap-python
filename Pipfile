@@ -9,7 +9,7 @@ docstring-parser = "~=0.7.3"
 ldap3 = "~=2.9"
 mailmanclient = '~=3.3.2'
 markdown = '~=3.3'
-typing_inspect = '~=0.6.0'
+typing_inspect = '~=0.7.0'
 
 [dev-packages]
 black = "~=21.5b1"
